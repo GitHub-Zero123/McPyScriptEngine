@@ -18,7 +18,6 @@ import org.zero123.Events.EntityEvent;
 import org.zero123.Events.ItemEvent;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.PyMcBridge.ModLoader;
-import org.zero123.PyMcBridge.Native;
 
 @Mod(PyScriptEngine.MODID)
 public class PyScriptEngine

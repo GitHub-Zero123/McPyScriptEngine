@@ -102,7 +102,8 @@ public class Native
         try (ZipInputStream zis = new ZipInputStream(zipInputStream))
         {
             ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
+            while ((entry = zis.getNextEntry()) != null)
+            {
                 Path filePath = targetDir.resolve(entry.getName());
                 if (entry.isDirectory()) {
                     Files.createDirectories(filePath);
