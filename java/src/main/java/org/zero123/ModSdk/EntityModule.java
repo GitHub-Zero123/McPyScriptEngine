@@ -1,5 +1,7 @@
 package org.zero123.ModSdk;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -252,6 +254,17 @@ public class EntityModule
         for (ServerPlayer player : server.getPlayerList().getPlayers())
         {
             player.sendSystemMessage(text);
+        }
+    }
+
+    /** 客户端玩家创建系统消息 **/
+    public static void _clientSendMessage(String msg)
+    {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player != null)
+        {
+            player.displayClientMessage(Component.literal(msg), false);
         }
     }
 }

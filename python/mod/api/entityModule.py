@@ -90,3 +90,9 @@ def _serverSendMessageAll(message: str):
     return findJavaCls(_ENTITY_MODULE, "_serverSendMessageAll", [CAST_TYPE.STRING], CAST_TYPE.VOID).call(
         message
     )
+
+def _clientSendMessage(message: str):
+    """ 向客户端发送消息 """
+    return findJavaCls(_ENTITY_MODULE, "_clientSendMessage", [CAST_TYPE.STRING], CAST_TYPE.VOID).call(
+        message
+    )

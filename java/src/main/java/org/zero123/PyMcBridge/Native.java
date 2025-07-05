@@ -31,9 +31,8 @@ public class Native
             {
                 throw new IOException("DLL not found in JAR");
             }
-            Path modNativePath = FMLPaths.MODSDIR.get()
-                    .resolve("PyScriptEngine")
-                    .resolve("PyMCBridge.dll");
+            Path modNativePath = FMLPaths.GAMEDIR.get()
+                    .resolve("python/PyMCBridge.dll");
             Files.createDirectories(modNativePath.getParent());
 //            if (!Files.exists(modNativePath))
 //            {
@@ -64,7 +63,7 @@ public class Native
 
     public static Path _initPythonEnvironment(String zipPack, String version) throws IOException
     {
-        Path pVMPath = FMLPaths.MODSDIR.get().resolve("PyScriptEngine/python").resolve(version);
+        Path pVMPath = FMLPaths.GAMEDIR.get().resolve("python").resolve(version);
         if (!Files.exists(pVMPath.resolve("python3.dll")))
         {
             extractZipFromJar(zipPack, pVMPath);

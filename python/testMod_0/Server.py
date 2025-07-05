@@ -78,6 +78,7 @@ def AddEntityServerEvent(args: dict) -> None:
         # 玩家加入了游戏
         entityId = args["id"]
         InitMsgComp().bind(entityId)  # 绑定初始化消息组件
+    # raise RuntimeError("AddEntityServerEvent 事件未处理！")
 
 @QBaseEntityComp.regEntity("minecraft:wither")  # 为特定实体注册组件
 class TntFireComp(TestFireComp):
