@@ -1,0 +1,5 @@
+{
+  "itemGroup.py_script_engine": "Example Mod Tab",
+  "block.py_script_engine.example_block": "Example Block",
+  "item.py_script_engine.example_item": "Example Item"
+}
