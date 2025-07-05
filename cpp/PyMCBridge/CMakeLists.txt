@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 # set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # find_package(Python COMPONENTS Interpreter Development REQUIRED)
-set(PYBIND11_FINDPYTHON ON)
+# set(PYBIND11_FINDPYTHON ON)
 find_package(pybind11 REQUIRED)
 find_package(JNI REQUIRED)
 

@@ -23,6 +23,7 @@ public class Native
 //        System.loadLibrary("PyMCBridge");
         if(loaded) { return; }
         loaded = true;
+        final var targetPath = initPythonEnvironment();
         // 解压dll文件
         try (InputStream in = Native.class.getResourceAsStream("/natives/PyMCBridge.dll"))
         {
@@ -44,14 +45,17 @@ public class Native
         {
             throw new RuntimeException("Failed to load native library", e);
         }
+        ModLoader.setPythonHome(targetPath.toString());
     }
 
-    public static void initPythonEnvironment()
+    public static Path initPythonEnvironment()
     {
         try
         {
-            String targetPath = _initPythonEnvironment("/python/Python312.zip", "Python312").toString();
-            ModLoader.setPythonHome(targetPath);
+            final var targetPath = _initPythonEnvironment("/python/Python312.zip", "Python312");
+            System.load(targetPath.resolve("python312.dll").toString());
+            // ModLoader.setPythonHome(targetPath.toString());
+            return targetPath;
         } catch (IOException e)
         {
             throw new RuntimeException(e);

@@ -41,7 +41,7 @@ public class PyScriptEngine
     {
         // 配置PyVM
         ModLoader.initializeVMConfigOnce(() -> {
-            Native.initPythonEnvironment();
+            // Native.initPythonEnvironment();
             ModLoader.setPyForceUseUTF8(1);
             ModLoader.setPyLineFlushMode(true);
             for (String path : PyInitConfig.getEnvPaths())

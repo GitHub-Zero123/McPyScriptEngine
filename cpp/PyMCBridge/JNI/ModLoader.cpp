@@ -126,6 +126,8 @@ JNIEXPORT void JNICALL Java_org_zero123_PyMcBridge_ModLoader_setPythonHome(JNIEn
 {
 	auto u8Path = QPyMCBridge::JNI::jStringToStdString(env, path);
 	glPythonHomePath = utf8ToWstring(u8Path);
+	//SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+	//AddDllDirectory(glPythonHomePath.c_str());
 	// 设置 Python 解释器路径
 	Py_SetPythonHome(const_cast<wchar_t*>(glPythonHomePath.c_str()));
 }
@@ -136,6 +138,7 @@ JNIEXPORT void JNICALL Java_org_zero123_PyMcBridge_ModLoader_setPythonHome(JNIEn
 	auto u8Path = QPyMCBridge::JNI::jStringToStdString(env, path);
 	std::cerr << "解释器路径设置失败, 暂未适配当前平台: " << u8Path << "\n";
 }
+
 #endif
 
 void JNICALL Java_org_zero123_PyMcBridge_ModLoader_setPyLineFlushMode(JNIEnv*, jclass, jboolean state)
