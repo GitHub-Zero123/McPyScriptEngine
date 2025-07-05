@@ -43,11 +43,11 @@ public class PyScriptEngine
             // Native.initPythonEnvironment();
             ModLoader.setPyForceUseUTF8(1);
             ModLoader.setPyLineFlushMode(true);
-            for (String path : PyInitConfig.getEnvPaths())
+            for (String path : PyInitConfig.initEnvPaths())
             {
                 ModLoader.addEnvPath(path);
             }
-            ModLoader.setTargetMods(PyInitConfig.getTargetMods());
+            ModLoader.setTargetMods(PyInitConfig.initTargetMods());
         });
     }
 
