@@ -39,7 +39,7 @@ class ClientSystemManager(SystemManager):
         super().__init__()
         self._eventBus = EventBus()
         import PyMCBridge.ModLoader as ModLoader # type: ignore
-        ModLoader.regServerDestroyHandler(self.onDestroy)
+        ModLoader.regClientDestroyHandler(self.onDestroy)
     
     def onDestroy(self):
         self.clear()
