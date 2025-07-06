@@ -11,14 +11,34 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
 public class EntityManager
 {
+    public static HashMap<UUID, Entity> _serverTempEntity = new HashMap<>();
+
+    public static void addServerTempEntity(UUID uuid, Entity entity)
+    {
+        _serverTempEntity.put(uuid, entity);
+    }
+
+    public static void removeServerTempEntity(UUID uuid)
+    {
+        _serverTempEntity.remove(uuid);
+    }
+
     // 服务端根据实体uuid搜索实体
     public static Optional<Entity> serverGetEntityByUUID(UUID uuid)
     {
+        // 先检查临时表
+        Entity tempEntity = _serverTempEntity.get(uuid);
+        if (tempEntity != null && tempEntity.isAlive())
+        {
+            // 存在Temp实体直接返回
+            return Optional.of(tempEntity);
+        }
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
 
         if (server != null)

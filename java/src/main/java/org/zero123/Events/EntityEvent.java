@@ -7,6 +7,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
+import org.zero123.ModSdk.EntityManager;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.ModSdk.WorldManager;
 
@@ -46,7 +47,10 @@ public class EntityEvent
 //                args.addProperty("itemName", BuiltInRegistries.ITEM.getKey(itemEntity.getItem().getItem()).toString());
                 args.addProperty("auxValue", 0);
             }
+            final var uuid = entity.getUUID();
+            EntityManager.addServerTempEntity(uuid, entity);
             EventManager.callServerJsonEvent(3, args.toString());
+            EntityManager.removeServerTempEntity(uuid);
         }
     }
 
