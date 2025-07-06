@@ -20,6 +20,8 @@ class TimerManager:
         self._clearTasks = []        # type: list[TimerTask]
 
     def update(self):
+        if not self._tasks:
+            return
         callFuncs = self._callFuncs
         clearTasks = self._clearTasks
         for task in self._tasks:
