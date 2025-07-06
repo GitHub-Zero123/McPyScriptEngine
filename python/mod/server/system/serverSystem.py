@@ -61,6 +61,11 @@ class ServerSystemManager(SystemManager):
         super().__init__()
         self._eventBus = EventBus()
         self.initNetworkEvent()
+        import PyMCBridge.ModLoader as ModLoader # type: ignore
+        ModLoader.regServerDestroyHandler(self.onDestroy)
+    
+    def onDestroy(self):
+        self.clear()
     
     def initNetworkEvent(self):
         """
