@@ -42,6 +42,7 @@ except:
 
 @Mod.Binding("testMod1", "1.0.0")
 class TestMod1(object):
+    # 网易我的世界MODSDK兼容层
     @Mod.InitServer()
     def initServer(self):
         serverApi.RegisterSystem("TestMod1", "TestServerSystem", "testMod_1.Server.TestSystem")
@@ -60,7 +61,7 @@ class TestMod1(object):
 ```
 
 ## 解释器差异说明
-`PyScriptEngine` 采用 **Python 3.12** 作为脚本解释器，与 **2.7.18** 存在部分差异。
+**PyScriptEngine** 采用 **Python 3.12** 作为脚本解释器，与 **2.7.18** 存在部分差异。
 
 ### import 搜索机制
 Python3 的模块相对导入更为严格，不再允许隐式导入：
