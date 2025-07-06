@@ -48,17 +48,17 @@ class ModScanner:
 
     def onServerInit(self):
         """ 服务端初始化 """
-        ModLoader.regServerDestroyHandler(self.onServerDestroy)
         self.tryInitAnnotationMetadata()
         for met in self._serverInit:
             TRY_EXEC_FUNC(met)
+        ModLoader.regServerDestroyHandler(self.onServerDestroy)
 
     def onClientInit(self):
         """ 客户端初始化 """
-        ModLoader.regClientDestroyHandler(self.onClientDestroy)
         self.tryInitAnnotationMetadata()
         for met in self._clientInit:
             TRY_EXEC_FUNC(met)
+        ModLoader.regClientDestroyHandler(self.onClientDestroy)
 
     def onServerDestroy(self):
         """ 服务端销毁 """

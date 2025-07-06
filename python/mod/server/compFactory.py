@@ -9,6 +9,7 @@ from ..api.entityModule import (
     _serverGetEntityTargetId,
     _serverSendMessage,
 )
+from ..common.timer import TimerManager, TimerTask
 from ..api.command import _setCommand
 from functools import lru_cache
 lambda: "By Zero123"
@@ -63,6 +64,18 @@ class GameEngineComp:
         """ 杀死实体 """
         return _serverKillEntity(entityId)
 
+    def AddTimer(self, delay: float, func: 'function', *args, **kwargs) -> TimerTask:
+        """ 添加定时器 """
+        return GameTimer.getInstance().addFuncTask(lambda: func(*args, **kwargs), int(round(delay * 20)))
+    
+    def AddRepeatedTimer(self, delay: float, func: 'function', *args, **kwargs) -> TimerTask:
+        """ 添加重复定时器 """
+        return GameTimer.getInstance().addFuncTask(lambda: func(*args, **kwargs), int(round(delay * 20)), repeat=True)
+
+    def CancelTimer(self, task: TimerTask):
+        """ 取消定时器 """
+        return GameTimer.getInstance().removeTask(task)
+
 class CommandComp:
     def __init__(self, levelId: str):
         self.levelId = levelId
@@ -88,6 +101,20 @@ class MsgComp:
     def NotifyOneMessage(self, playerId: str, msg: str, color: str=""):
         """ 给指定玩家发送消息 """
         return _serverSendMessage(playerId, color+msg)
+
+class GameTimer(TimerManager):
+    _INSTANCE = None
+
+    @staticmethod
+    def getInstance():
+        if GameTimer._INSTANCE is None:
+            GameTimer._INSTANCE = GameTimer()
+        return GameTimer._INSTANCE
+
+    def __init__(self):
+        super().__init__()
+        from .system.serverSystem import ServerSystemManager
+        ServerSystemManager.getInstance().listenForEvent(("Minecraft", "Engine", "OnScriptTickServer"), self.update)
 
 class EngineCompFactory:
     # 实现网易组件工厂
@@ -121,10 +148,8 @@ class EngineCompFactory:
     
     @lru_cache(80)
     def CreateAction(self, entityId: str):
-        """ 创建Action组件 """
         return ActionComp(entityId)
 
     @lru_cache(80)
     def CreateMsg(self, entityId: str):
-        """ 创建消息组件 """
         return MsgComp(entityId)

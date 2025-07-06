@@ -66,7 +66,7 @@ class ServerSystemManager(SystemManager):
     
     def onDestroy(self):
         self.clear()
-    
+
     def initNetworkEvent(self):
         """
         初始化网络事件监听
