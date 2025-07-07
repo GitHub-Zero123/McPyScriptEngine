@@ -296,7 +296,7 @@ public:
         : JVMFunction(jvm, clsPath, funcName, getJavaSignature(argsType, retType)),
         argsType(argsType), retType(retType) {}
 
-    py::object call(const py::args& args)
+    py::object _call(const py::args& args, const bool noGIL)
     {
         if (args.size() != argsType.size())
         {
@@ -342,13 +342,17 @@ public:
         }
 
         py::object retVal = py::none();
-
+        std::optional<py::gil_scoped_release> gil;
+        if (noGIL)
+        {
+            gil.emplace();
+        }
         try
         {
             switch (retType)
             {
             case CAST_TYPE::VOID:
-            {
+            {                
                 if (jargs.size() == 0)
                 {
                     callStaticVoidMethod();
@@ -357,6 +361,7 @@ public:
                 {
                     callStaticVoidMethod(jargs);
                 }
+				gil.reset();
                 retVal = py::none();
                 break;
             }
@@ -372,6 +377,7 @@ public:
                 {
                     res = callStaticIntMethod(jargs);
                 }
+                gil.reset();
                 retVal = py::int_(res);
                 break;
             }
@@ -387,7 +393,7 @@ public:
                 {
                     jres = objectFuncCall(jargs);
                 }
-
+                gil.reset();
                 if (jres == nullptr)
                 {
                     retVal = py::none();
@@ -430,6 +436,16 @@ public:
             env->DeleteLocalRef(s);
         }
         return retVal;
+    }
+
+    py::object call(const py::args& args)
+    {
+        return _call(args, false);
+    }
+
+    py::object noGILCall(const py::args& args)
+    {
+        return _call(args, true);
     }
 };
 
@@ -500,7 +516,8 @@ namespace QPyMCBridge
                     py::arg("funcName"),
                     py::arg("argsType"),
                     py::arg("retType") = CAST_TYPE::VOID)
-                .def("call", &PyCastJVMFunction::call);
+                .def("call", &PyCastJVMFunction::call)
+                .def("noGILCall", &PyCastJVMFunction::noGILCall);
         }
     }
 }

@@ -14,3 +14,10 @@ class PyCastJVMFunction:
             调用JVM函数并自动转换为Python类型
         """
         pass
+
+    def noGILCall(self, *args) -> object | None:
+        """
+            调用JVM函数并自动转换为Python类型
+            期间不持有GIL
+        """
+        pass
