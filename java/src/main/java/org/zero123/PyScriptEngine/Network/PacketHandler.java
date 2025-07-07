@@ -47,7 +47,7 @@ public class PacketHandler
                         jo.addProperty("playerId", sender.getUUID().toString());
                         jo.addProperty("msg", msg);
                         EventManager.callServerJsonEvent(-1, jo.toString());
-                    });;
+                    });
                 },
                 // 客户端收到服务器发包时处理
                 (packet, context) ->
