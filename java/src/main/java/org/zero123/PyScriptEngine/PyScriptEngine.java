@@ -18,6 +18,7 @@ import org.zero123.PyScriptEngine.Events.EntityEvent;
 import org.zero123.PyScriptEngine.Events.ItemEvent;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.PyMcBridge.ModLoader;
+import org.zero123.PyScriptEngine.Network.PacketHandler;
 
 @Mod(PyScriptEngine.MODID)
 public class PyScriptEngine
@@ -49,6 +50,7 @@ public class PyScriptEngine
             }
             ModLoader.setTargetMods(PyInitConfig.initTargetMods());
         });
+        PacketHandler.init();
     }
 
     // 服务端启动事件
