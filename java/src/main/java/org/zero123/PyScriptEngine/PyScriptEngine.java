@@ -1,4 +1,4 @@
-package org.zero123;
+package org.zero123.PyScriptEngine;
 
 import com.mojang.logging.LogUtils;
 
@@ -14,8 +14,8 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.slf4j.Logger;
-import org.zero123.Events.EntityEvent;
-import org.zero123.Events.ItemEvent;
+import org.zero123.PyScriptEngine.Events.EntityEvent;
+import org.zero123.PyScriptEngine.Events.ItemEvent;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.PyMcBridge.ModLoader;
 

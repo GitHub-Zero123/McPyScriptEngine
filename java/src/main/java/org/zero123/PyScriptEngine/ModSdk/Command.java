@@ -1,4 +1,4 @@
-package org.zero123.ModSdk;
+package org.zero123.PyScriptEngine.ModSdk;
 
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;

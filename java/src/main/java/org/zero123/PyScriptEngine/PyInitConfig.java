@@ -1,4 +1,4 @@
-package org.zero123;
+package org.zero123.PyScriptEngine;
 
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;

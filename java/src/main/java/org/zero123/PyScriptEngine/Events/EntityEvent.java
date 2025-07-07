@@ -1,4 +1,4 @@
-package org.zero123.Events;
+package org.zero123.PyScriptEngine.Events;
 
 import com.google.gson.JsonObject;
 import net.minecraft.world.entity.AgeableMob;
@@ -7,9 +7,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
-import org.zero123.ModSdk.EntityManager;
+import org.zero123.PyScriptEngine.ModSdk.EntityManager;
 import org.zero123.PyMcBridge.EventManager;
-import org.zero123.ModSdk.WorldManager;
+import org.zero123.PyScriptEngine.ModSdk.WorldManager;
 
 public class EntityEvent
 {

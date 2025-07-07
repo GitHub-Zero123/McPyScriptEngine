@@ -1,4 +1,4 @@
-package org.zero123.ModSdk;
+package org.zero123.PyScriptEngine.ModSdk;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;

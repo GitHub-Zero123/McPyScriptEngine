@@ -1,6 +1,6 @@
 from .jni import findJavaCls, CAST_TYPE
 
-_CMD_MODULE = "org/zero123/ModSdk/Command"
+_CMD_MODULE = "org/zero123/PyScriptEngine/ModSdk/Command"
 
 def _setCommand(cmdStr: str, entityId: str="", showOutput: bool=False) -> bool:
     """ 设置执行命令 """

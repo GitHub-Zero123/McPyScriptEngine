@@ -1,10 +1,10 @@
-package org.zero123.Events;
+package org.zero123.PyScriptEngine.Events;
 
 import com.google.gson.JsonObject;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.zero123.PyMcBridge.EventManager;
-import org.zero123.ModSdk.ItemManager;
+import org.zero123.PyScriptEngine.ModSdk.ItemManager;
 
 public class ItemEvent
 {

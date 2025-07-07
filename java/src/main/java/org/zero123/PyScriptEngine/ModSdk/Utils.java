@@ -1,4 +1,4 @@
-package org.zero123.ModSdk;
+package org.zero123.PyScriptEngine.ModSdk;
 
 public class Utils
 {

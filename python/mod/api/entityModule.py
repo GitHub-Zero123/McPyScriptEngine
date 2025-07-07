@@ -2,8 +2,8 @@ from .jni import findJavaCls, CAST_TYPE, floatSplit, numberTupleJoin
 from json import dumps
 lambda: "By Zero123"
 
-_ENTITY_MODULE = "org/zero123/ModSdk/EntityModule"
-_PROJECTILE_MODULE = "org/zero123/ModSdk/ProjectileModule"
+_ENTITY_MODULE = "org/zero123/PyScriptEngine/ModSdk/EntityModule"
+_PROJECTILE_MODULE = "org/zero123/PyScriptEngine/ModSdk/ProjectileModule"
 
 def _serverGetEntityPos(entityId: str):
     """ 获取实体位置 """
