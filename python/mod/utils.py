@@ -64,3 +64,20 @@ def decodeFromPacket(packet: str) -> dict:
         import traceback
         traceback.print_exc()
         return {}
+
+def decodeJsonPacket(packet: dict) -> dict:
+    """ 尝试解码JSON网络包 """
+    if not "msg" in packet:
+        raise RuntimeError("Invalid packet format: 'msg' key not found")
+    packet["msg"] = decodeFromPacket(packet["msg"])  # 解码msg字段
+    return packet
+
+def packSystemPacket(event: tuple, sendData: dict, typeId: object=0) -> str:
+    # 注: 内置的数据包typeId默认为0 若需自定义数据包处理handler, 请区分typeId(允许使用非int值)
+    """
+    打包系统事件数据包
+    :param event: 系统事件名称
+    :param sendData: 数据参数
+    :return: 打包后的字段
+    """
+    return serializeToPacket({"event": event, "data": sendData, "typeId": typeId})

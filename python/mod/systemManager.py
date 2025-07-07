@@ -2,8 +2,8 @@ from .utils import TRY_EXEC_FUNC, importChild
 
 class BaseSystem:
     def __init__(self, namespace: str, systemName: str):
-        self.namespace = namespace
-        self.systemName = systemName
+        self._namespace = namespace
+        self._systemName = systemName
 
     def ListenForEvent(self, namespace: str, systemName: str, eventName: str, parent: object, func: 'function', priority: int = 0):
         pass
@@ -22,6 +22,24 @@ class BaseSystem:
 
     def Destroy(self):
         pass
+
+    def BroadcastEvent(self, eventName: str, sendData: dict):
+        """
+        本地广播事件, 仅本地其他系统端能够接收到
+        :param eventName: 事件名称
+        :param sendData: 数据参数
+        """
+        raise NotImplementedError("BroadcastEvent method must be implemented in subclass")
+
+    # 无用设计, 仅作兼容
+    def DefineEvent(self, *_):
+        pass
+
+    def UnDefineEvent(self, *_):
+        pass
+
+    def CreateEventData(self) -> dict:
+        return {}
 
 class SystemManager:
     def __init__(self):
