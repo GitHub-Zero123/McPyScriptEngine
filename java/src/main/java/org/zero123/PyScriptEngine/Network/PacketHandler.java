@@ -1,7 +1,6 @@
 package org.zero123.PyScriptEngine.Network;
 
 import com.google.gson.JsonObject;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -52,7 +51,7 @@ public class PacketHandler
                 // 客户端收到服务器发包时处理
                 (packet, context) ->
                 {
-                    Minecraft.getInstance().execute(() -> {
+                    context.enqueueWork(() -> {
                         final var msg = packet.message();
                         JsonObject jo = new JsonObject();
                         jo.addProperty("msg", msg);
