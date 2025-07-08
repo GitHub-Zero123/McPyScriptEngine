@@ -1,5 +1,7 @@
 package org.zero123.PyScriptEngine.ModSdk;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -17,13 +19,28 @@ import java.util.UUID;
 
 public class EntityManager
 {
-    public static HashMap<UUID, Entity> _serverTempEntity = new HashMap<>();
+    public static final HashMap<UUID, Entity> _serverTempEntity = new HashMap<>();
+    private static final HashMap<UUID, Entity> _clientTempEntity = new HashMap<>();
 
+    // 客户端记录临时实体
+    public static void addClientTempEntity(UUID uuid, Entity entity)
+    {
+        _clientTempEntity.put(uuid, entity);
+    }
+
+    // 客户端移除临时实体
+    public static void removeClientTempEntity(UUID uuid)
+    {
+        _clientTempEntity.remove(uuid);
+    }
+
+    // 服务端记录临时实体
     public static void addServerTempEntity(UUID uuid, Entity entity)
     {
         _serverTempEntity.put(uuid, entity);
     }
 
+    // 服务端移除临时实体
     public static void removeServerTempEntity(UUID uuid)
     {
         _serverTempEntity.remove(uuid);
@@ -62,6 +79,40 @@ public class EntityManager
         {
             return serverGetEntityByUUID(UUID.fromString(uuid));
         } catch (IllegalArgumentException e)
+        {
+            return Optional.empty();
+        }
+    }
+
+    // 客户端根据 UUID 获取实体
+    public static Optional<Entity> clientGetEntityByUUID(UUID uuid)
+    {
+        Entity tempEntity = _clientTempEntity.get(uuid);
+        if (tempEntity != null && tempEntity.isAlive())
+        {
+            return Optional.of(tempEntity);
+        }
+        Minecraft mc = Minecraft.getInstance();
+        ClientLevel level = mc.level;
+        if (level != null)
+        {
+            Entity entity = level.getEntity(uuid);
+            if (entity != null)
+            {
+                return Optional.of(entity);
+            }
+        }
+        return Optional.empty();
+    }
+
+    // 字符串 UUID 版本
+    public static Optional<Entity> clientGetEntityByUUID(String uuid)
+    {
+        try
+        {
+            return clientGetEntityByUUID(UUID.fromString(uuid));
+        }
+        catch (IllegalArgumentException e)
         {
             return Optional.empty();
         }

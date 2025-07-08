@@ -50,3 +50,8 @@ def GetPlayerList() -> list:
     """ 获取玩家列表 """
     from ..api.entityModule import _serverGetAllPlayerId
     return _serverGetAllPlayerId()
+
+def GetIntPos(pos: tuple) -> tuple:
+    """ 获取整数位置 """
+    from math import floor
+    return (floor(pos[0]), floor(pos[1]), floor(pos[2]))

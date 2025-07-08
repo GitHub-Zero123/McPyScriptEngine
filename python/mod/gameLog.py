@@ -1,6 +1,6 @@
 import sys
 import PyMCBridge.ModLoader as ModLoader # type: ignore
-from .api import entityModule # type: ignore
+from .api import entityModule
 
 _baseStdOutWrite = sys.stdout.write
 

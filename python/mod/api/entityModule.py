@@ -4,6 +4,7 @@ lambda: "By Zero123"
 
 _ENTITY_MODULE = "org/zero123/PyScriptEngine/ModSdk/EntityModule"
 _PROJECTILE_MODULE = "org/zero123/PyScriptEngine/ModSdk/ProjectileModule"
+_CMD_MODULE = "org/zero123/PyScriptEngine/ModSdk/Command"
 
 def _serverGetEntityPos(entityId: str):
     """ 获取实体位置 """
@@ -96,3 +97,9 @@ def _clientSendMessage(message: str):
     return findJavaCls(_ENTITY_MODULE, "_clientSendMessage", [CAST_TYPE.STRING], CAST_TYPE.VOID).call(
         message
     )
+
+def _setCommand(cmdStr: str, entityId: str="", showOutput: bool=False) -> bool:
+    """ 设置执行命令 """
+    return bool(findJavaCls(_CMD_MODULE, "_setCommand", [CAST_TYPE.STRING, CAST_TYPE.STRING, CAST_TYPE.INT], CAST_TYPE.INT).call(
+        cmdStr, entityId, int(showOutput)
+    ))

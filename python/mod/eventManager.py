@@ -101,7 +101,7 @@ class EventManager:
         return self.unRegEventHandler(event, EventHandler(func, priority))
 
 class SERVER_EVENT:
-    NETWORK_PACKET_RECEIVED = -1    # 网络包接收事件
+    NETWORK_PACKET_RECEIVED = -1
     SERVER_TICK_PRE = 0
     SERVER_TICK_POST = 1    # Tick事件
     RIGHT_CLICK_ITEM = 2    # 物品尝试使用
@@ -109,16 +109,25 @@ class SERVER_EVENT:
     ENTITY_LEAVE_LEVEL = 4  # 实体离开世界
 
 class CLIENT_EVENT:
-    NETWORK_PACKET_RECEIVED = -1    # 网络包接收事件
-    CLIENT_TICK_PRE = 0     # Tick事件
+    NETWORK_PACKET_RECEIVED = -1
+    CLIENT_TICK_PRE = 0
     CLIENT_TICK_POST = 1    # Tick事件
+    RIGHT_CLICK_ITEM = 2    # 物品尝试使用
+    ENTITY_JOIN_LEVEL = 3   # 实体加入世界
+    ENTITY_LEAVE_LEVEL = 4  # 实体离开世界
 
 _MC_EVENT_MAPPING_TABLE = {
+    # 游戏Tick事件(20tick/s)
     "OnScriptTickServer": SERVER_EVENT.SERVER_TICK_POST,
     "OnScriptTickClient": CLIENT_EVENT.CLIENT_TICK_POST,
+    # 物品尝试使用事件
     "ServerItemTryUseEvent": SERVER_EVENT.RIGHT_CLICK_ITEM,
+    "ClientItemTryUseEvent": CLIENT_EVENT.RIGHT_CLICK_ITEM,
+    # 实体构造/析构事件(新增/删除): 与BE不同, JE的实体与区块一并加载或卸载
     "AddEntityServerEvent": SERVER_EVENT.ENTITY_JOIN_LEVEL,
+    "AddEntityClientEvent": CLIENT_EVENT.ENTITY_JOIN_LEVEL,
     "EntityRemoveEvent": SERVER_EVENT.ENTITY_LEAVE_LEVEL,
+    "RemoveEntityClientEvent": CLIENT_EVENT.ENTITY_LEAVE_LEVEL,
     # 网络包接收事件
     "ServerboundPacketReceivedEvent": SERVER_EVENT.NETWORK_PACKET_RECEIVED,
     "ClientboundPacketReceivedEvent": CLIENT_EVENT.NETWORK_PACKET_RECEIVED,
@@ -139,11 +148,16 @@ class EngineEventManager(EventManager):
     # def callEvent(self, event, *args):
     #     return super().callEvent(self.formatEvent(event), *args)
 
-    def nativeEventUpdate(self, eventId=-1):
+    def nativeEventUpdate(self, eventId=0):
         if eventId in self._nativeEventInitSet:
             return
         self._nativeEventInitSet.add(eventId)
         self._initNativeEventListener(eventId)
+    
+    def nativeListen(self, eventId: int, func: 'function', priority: int = 0):
+        """ 注册原生事件监听器 """
+        self.nativeEventUpdate(eventId)
+        return self.regEventFuncHandler(eventId, func, priority)
 
     def _initNativeEventListener(self, eventId=-1):
         """ 初始化原生事件监听器 """

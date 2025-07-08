@@ -43,3 +43,8 @@ def ImportModule(filePath: str) -> object:
 
 def GetDirFromRot(rot: tuple) -> tuple:
     return entityRotToDir(rot)
+
+def GetIntPos(pos: tuple) -> tuple:
+    """ 获取整数位置 """
+    from math import floor
+    return (floor(pos[0]), floor(pos[1]), floor(pos[2]))

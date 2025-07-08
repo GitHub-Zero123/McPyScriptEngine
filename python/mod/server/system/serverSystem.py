@@ -77,8 +77,9 @@ class ServerSystemManager(SystemManager):
         """
         初始化网络事件监听
         """
-        self._eventBus.regEventFuncHandler(-1, self.networkPacketReceived)
-        self._eventBus.nativeEventUpdate(-1)
+        self._eventBus.nativeListen(-1, self.networkPacketReceived)
+        # self._eventBus.regEventFuncHandler(-1, self.networkPacketReceived)
+        # self._eventBus.nativeEventUpdate(-1)
     
     def sendEventToClient(self, playerId: str, eventData: tuple, sendData: dict):
         """
@@ -115,8 +116,7 @@ class ServerSystemManager(SystemManager):
         eventData = packetDict.get("msg")
         if not isinstance(eventData, dict):
             return
-        typeId = eventData.get("typeId", "")
-        if typeId != 0:
+        if eventData.get("typeId", -1) != 0:
             # 忽略处理非系统事件
             return
         playerId = packetDict.get("playerId", "")

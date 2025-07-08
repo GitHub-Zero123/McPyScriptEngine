@@ -12,13 +12,16 @@ public class ItemEvent
     public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
     {
         var item = event.getItemStack().getItem();
-        if (!event.getLevel().isClientSide())
+        var data = new JsonObject();
+        data.addProperty("playerId", event.getEntity().getUUID().toString());
+        data.add("itemDict", ItemManager.itemToJson(item));
+        data.addProperty("cancel", false); // 暂不支持cancel
+        if (event.getLevel().isClientSide())
         {
-            // 服务端用户尝试使用物品
-            var data = new JsonObject();
-            data.addProperty("playerId", event.getEntity().getUUID().toString());
-            data.add("itemDict", ItemManager.itemToJson(item));
-            data.addProperty("cancel", false); // 暂不支持cancel
+            // 客户端触发
+            EventManager.callClientJsonEvent(2, data.toString());
+        } else {
+            // 服务端触发
             EventManager.callServerJsonEvent(2, data.toString());
         }
     }

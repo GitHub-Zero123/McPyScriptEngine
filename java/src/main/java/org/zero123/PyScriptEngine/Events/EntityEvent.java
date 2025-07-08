@@ -17,37 +17,43 @@ public class EntityEvent
     @SubscribeEvent
     public void onEntityJoinLevel(EntityJoinLevelEvent event)
     {
-        if (!event.getLevel().isClientSide())
+        // 服务端事件
+        final var entity = event.getEntity();
+        JsonObject args = new JsonObject();
+        // 基础参数处理
+        args.addProperty("id", entity.getUUID().toString());
+        args.addProperty("dimensionId", WorldManager.getDimensionId(entity.level()));
+        args.addProperty("engineTypeStr", EntityType.getKey(entity.getType()).toString());
+        // 位置信息处理
+        final var pos = entity.position();
+        args.addProperty("x", pos.x);
+        args.addProperty("y", pos.y);
+        args.addProperty("z", pos.z);
+        args.addProperty("isBaby", false);
+        // 宝宝实体处理
+        if (entity instanceof AgeableMob ageable)
         {
-            // 服务端事件
-            final var entity = event.getEntity();
-            JsonObject args = new JsonObject();
-            // 基础参数处理
-            args.addProperty("id", entity.getUUID().toString());
-            args.addProperty("dimensionId", WorldManager.getDimensionId(entity.level()));
-            args.addProperty("engineTypeStr", EntityType.getKey(entity.getType()).toString());
-            // 位置信息处理
-            final var pos = entity.position();
-            args.addProperty("x", pos.x);
-            args.addProperty("y", pos.y);
-            args.addProperty("z", pos.z);
-            args.addProperty("isBaby", false);
-            // 宝宝实体处理
-            if (entity instanceof AgeableMob ageable)
+            if (ageable.isBaby())
             {
-                if (ageable.isBaby())
-                {
-                    args.addProperty("isBaby", true);
-                }
+                args.addProperty("isBaby", true);
             }
-            // 物品实体（ItemEntity）
-            if (entity instanceof ItemEntity)
-            {
-                args.addProperty("itemName", "minecraft:item");
+        }
+        // 物品实体（ItemEntity）
+        if (entity instanceof ItemEntity)
+        {
+            args.addProperty("itemName", "minecraft:item");
 //                args.addProperty("itemName", BuiltInRegistries.ITEM.getKey(itemEntity.getItem().getItem()).toString());
-                args.addProperty("auxValue", 0);
-            }
-            final var uuid = entity.getUUID();
+            args.addProperty("auxValue", 0);
+        }
+        final var uuid = entity.getUUID();
+        if (event.getLevel().isClientSide())
+        {
+            EntityManager.addClientTempEntity(uuid, entity);
+            EventManager.callClientJsonEvent(3, args.toString());
+            EntityManager.removeClientTempEntity(uuid);
+        }
+        else
+        {
             EntityManager.addServerTempEntity(uuid, entity);
             EventManager.callServerJsonEvent(3, args.toString());
             EntityManager.removeServerTempEntity(uuid);
@@ -58,12 +64,15 @@ public class EntityEvent
     @SubscribeEvent
     public void onEntityLeaveLevel(EntityLeaveLevelEvent event)
     {
-        if (!event.getLevel().isClientSide())
+        final var entity = event.getEntity();
+        JsonObject args = new JsonObject();
+        args.addProperty("id", entity.getUUID().toString());
+        if (event.getLevel().isClientSide())
         {
-            // 服务端事件
-            final var entity = event.getEntity();
-            JsonObject args = new JsonObject();
-            args.addProperty("id", entity.getUUID().toString());
+            EventManager.callClientJsonEvent(4, args.toString());
+        }
+        else
+        {
             EventManager.callServerJsonEvent(4, args.toString());
         }
     }

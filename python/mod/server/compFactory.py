@@ -8,9 +8,9 @@ from ..api.entityModule import (
     _serverKillEntity,
     _serverGetEntityTargetId,
     _serverSendMessage,
+    _setCommand,
 )
 from ..common.timer import TimerManager, TimerTask
-from ..api.command import _setCommand
 from functools import lru_cache
 lambda: "By Zero123"
 
@@ -67,7 +67,7 @@ class GameEngineComp:
     def AddTimer(self, delay: float, func: 'function', *args, **kwargs) -> TimerTask:
         """ 添加定时器 """
         return GameTimer.getInstance().addFuncTask(lambda: func(*args, **kwargs), int(round(delay * 20)))
-    
+
     def AddRepeatedTimer(self, delay: float, func: 'function', *args, **kwargs) -> TimerTask:
         """ 添加重复定时器 """
         return GameTimer.getInstance().addFuncTask(lambda: func(*args, **kwargs), int(round(delay * 20)), repeat=True)

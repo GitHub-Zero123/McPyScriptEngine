@@ -52,7 +52,7 @@ public record Packet(String message) implements CustomPacketPayload
         return new ClientboundCustomPayloadPacket(this);
     }
 
-    // 🔧 压缩并写入
+    // 压缩并写入
     private static void writeCompressedString(FriendlyByteBuf buf, String str)
     {
         try
@@ -71,7 +71,7 @@ public record Packet(String message) implements CustomPacketPayload
         }
     }
 
-    // 🔧 解压读取
+    // 解压读取
     private static String readCompressedString(FriendlyByteBuf buf)
     {
         try
