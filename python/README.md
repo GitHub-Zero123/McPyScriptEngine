@@ -7,5 +7,6 @@
 ## 测试 Demo
 - `testMod_0`：`QuModLibs` 的移植测试，实现了一组基础玩法。
 - `testMod_1`：`ModSdk` 系统与组件工厂的移植测试。
+- `testMod_2`: `QuMod3` 独立API测试（仅限PyScriptEngine）。
 
 每个 Demo 文件夹均包含相应功能的示例代码，便于参考和测试。
