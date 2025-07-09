@@ -81,7 +81,7 @@ class ServerSystemManager(SystemManager):
         # self._eventBus.regEventFuncHandler(-1, self.networkPacketReceived)
         # self._eventBus.nativeEventUpdate(-1)
     
-    def sendEventToClient(self, playerId: str, eventData: tuple, sendData: dict):
+    def sendEventToClient(self, playerId: str, eventData: object, sendData: dict):
         """
         发送事件到特定客户端
         :param playerId: 玩家ID

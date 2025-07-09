@@ -59,7 +59,7 @@ class ClientSystemManager(SystemManager):
         # self._eventBus.regEventFuncHandler(-1, self.networkPacketReceived)
         # self._eventBus.nativeEventUpdate(-1)
 
-    def sendToServer(self, eventData: tuple, sendData: dict):
+    def sendToServer(self, eventData: object, sendData: dict):
         """
         发送事件到服务器
         :param eventName: 事件名称

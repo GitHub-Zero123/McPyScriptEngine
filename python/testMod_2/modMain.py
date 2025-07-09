@@ -3,7 +3,19 @@ from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
 from mod.qumod3.event.item import ServerItemTryUseEvent
 from mod.qumod3.event.entity import AddEntityServerEvent
 from mod.qumod3.entity import ServerEntity, ClientEntity
+from mod.qumod3.rpc import RpcBridge
 import mod.server.extraServerApi as serverApi
+
+rpc = RpcBridge("testMod_2")    # 命名空间为 testMod_2
+
+@rpc.clientRpc
+def clientTestFunc(args={}):
+    print("客户端接收到了服务端的RPC调用！{}".format(args))
+    rpc.callServer(serverTestFunc)
+
+@rpc.serverRpc
+def serverTestFunc():    
+    print("服务端接收到了客户端的RPC调用！{}".format(RpcBridge.getCurrentRpcSenderId()))
 
 @EventBus
 def onItemTryUseServer(event: ServerItemTryUseEvent):
@@ -31,6 +43,9 @@ def onItemTryUseServer(event: ServerItemTryUseEvent):
             }
         )
         player.sendMessage("Creeper projectile created!")
+    elif itemName == "minecraft:diamond_axe":
+        player = event.getEntity()
+        rpc.callClient(player, clientTestFunc, {"message": "Hello from server!"})
 
 @EventBus
 def onAddEntityServer(event: AddEntityServerEvent):
