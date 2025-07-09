@@ -29,13 +29,22 @@
 ### 游戏日志
 如果使用正式环境的jar包引擎开发测试，请在modMain.py文件启用局内游戏日志支持。
 ```python
+try:
+    # 启用游戏内日志支持(仅限PyScriptEngine, 官方Modsdk中并未提供此模块)
+    import mod.gameLog
+except:
+    pass
+```
+
+### MODSDK兼容层
+**PyScriptEngine** 提供了适用于网易我的世界ModSdk的兼容层，以便开发者快速上手。
+```python
 # modMain.py
 from mod.common.mod import Mod
 import mod.server.extraServerApi as serverApi
 import mod.client.extraClientApi as clientApi
 
 try:
-    # 启用游戏内日志支持(仅限PyScriptEngine, 官方Modsdk中并未提供此模块)
     import mod.gameLog
 except:
     pass
@@ -58,6 +67,49 @@ class TestMod1(object):
     @Mod.DestroyClient()
     def clientDestroy(self):
         print("客户端销毁")
+```
+
+### QuMod3-API
+非兼容的独占API, 仅适用于PyScriptEngine。
+```python
+# modMain.py
+from mod.qumod3.api import EventBus, ServerInit, ClientInit
+from mod.qumod3.event.item import ServerItemTryUseEvent
+from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
+from mod.qumod3.entity import ServerEntity
+import mod.gameLog
+# 若不考虑跨平台(ModSdk)兼容，可直接使用mod.qumod3包开发MOD项目。
+
+@EventBus
+def onItemTryUseServer(event: ServerItemTryUseEvent):
+    # 服务端玩家物品使用事件(面向对象)
+    itemName = event.getItemName()
+    if itemName == "minecraft:diamond_sword":
+        player = event.getEntity()
+        for entity in ServerEntity.getWorldEntities():
+            if entity == player:
+                continue
+            entity.setCommand("/summon lightning_bolt")
+            entity.kill()
+        player.sendMessage("All entities have been killed except you!")
+
+@EventBus
+def onScriptTickServer(event: OnScriptTickServer):
+    # 服务端Tick事件
+    pass
+
+@EventBus
+def onScriptTickClient(event: OnScriptTickClient):
+    # 客户端Tick事件(静态注册受imp机制影响，是线程安全的)
+    pass
+
+@ServerInit
+def onServerInit():
+    import xxx  # 对于复杂项目可以分模块管理
+
+@ClientInit
+def onClientInit():
+    import xxx
 ```
 
 ## 解释器差异说明
