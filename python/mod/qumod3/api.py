@@ -1,7 +1,7 @@
 from .event.base import BaseEvent
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 
-def EventBus(func: 'function'):
+def SubscribeEvent(func: 'function'):
     """
         装饰器 注册事件总线事件
     """

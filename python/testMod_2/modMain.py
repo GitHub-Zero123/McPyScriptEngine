@@ -1,4 +1,4 @@
-from mod.qumod3.api import EventBus
+from mod.qumod3.api import SubscribeEvent, ServerInit, ClientInit
 from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
 from mod.qumod3.event.item import ServerItemTryUseEvent
 from mod.qumod3.event.entity import AddEntityServerEvent
@@ -17,7 +17,7 @@ def clientTestFunc(args={}):
 def serverTestFunc():    
     print("服务端接收到了客户端的RPC调用！{}".format(RpcBridge.getCurrentRpcSenderId()))
 
-@EventBus
+@SubscribeEvent
 def onItemTryUseServer(event: ServerItemTryUseEvent):
     itemName = event.getItemName()
     if itemName == "minecraft:diamond_sword":
@@ -47,7 +47,7 @@ def onItemTryUseServer(event: ServerItemTryUseEvent):
         player = event.getEntity()
         rpc.callClient(player, clientTestFunc, {"message": "Hello from server!"})
 
-@EventBus
+@SubscribeEvent
 def onAddEntityServer(event: AddEntityServerEvent):
     if event.getEngineTypeStr() != "minecraft:player":
         return
@@ -58,10 +58,18 @@ def onAddEntityServer(event: AddEntityServerEvent):
     player.sendMessage("§b2.§f 右键使用 §a钻石 §f→ §d发射一只苦力怕")
     player.sendMessage("§b3.§f §e哈斯克僵尸 §f现在会远程扔出存活一定时间的§e僵尸")
 
-@EventBus
+@SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):
     pass
 
-@EventBus
+@SubscribeEvent
 def onScriptTickClient(event: OnScriptTickClient):
+    pass
+
+@ServerInit
+def serverInit():
+    pass
+
+@ClientInit
+def clientInit():
     pass

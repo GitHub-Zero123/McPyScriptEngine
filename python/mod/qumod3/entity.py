@@ -184,6 +184,9 @@ class ClientEntity(Entity):
             return False
         return _clientCheckEntityAlive(self.entityId)
 
+    def hasEntity(self):
+        return self.isAlive()
+
     def isPlayer(self):
         if not self.entityId:
             return False
@@ -228,7 +231,7 @@ class ServerEntity(Entity):
 
     def setCommand(self, command: str, showOutput: bool=False):
         """
-        设置实体的命令(仅限服务端)
+        设置实体执行命令(仅限服务端)
         :param command: 命令字符串
         """
         if not self.entityId:

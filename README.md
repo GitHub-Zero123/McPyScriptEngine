@@ -73,14 +73,14 @@ class TestMod1(object):
 非兼容的独占API，仅适用于PyScriptEngine。
 ```python
 # modMain.py
-from mod.qumod3.api import EventBus, ServerInit, ClientInit
+from mod.qumod3.api import SubscribeEvent, ServerInit, ClientInit
 from mod.qumod3.event.item import ServerItemTryUseEvent
 from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
 from mod.qumod3.entity import ServerEntity
 import mod.gameLog
 # 若不考虑跨平台(ModSdk)兼容，可直接使用mod.qumod3包开发MOD项目。
 
-@EventBus
+@SubscribeEvent
 def onItemTryUseServer(event: ServerItemTryUseEvent):
     # 服务端玩家物品使用事件(面向对象)
     itemName = event.getItemName()
@@ -93,12 +93,12 @@ def onItemTryUseServer(event: ServerItemTryUseEvent):
             entity.kill()
         player.sendMessage("All entities have been killed except you!")
 
-@EventBus
+@SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):
     # 服务端Tick事件
     pass
 
-@EventBus
+@SubscribeEvent
 def onScriptTickClient(event: OnScriptTickClient):
     # 客户端Tick事件(静态注册受imp机制影响，是线程安全的)
     pass
