@@ -11,3 +11,15 @@ class OnScriptTickClient(BaseClientEvent):
     客户端脚本Tick事件
     """
     _NATIVE_ID = CLIENT_EVENT.CLIENT_TICK_POST
+
+class LoadServerAddonScriptsAfter(BaseServerEvent):
+    """
+    服务端MOD加载完成事件
+    """
+    _NATIVE_ID = SERVER_EVENT.MOD_LOAD_FINISH
+
+class LoadClientAddonScriptsAfter(BaseClientEvent):
+    """
+    客户端MOD加载完成事件
+    """
+    _NATIVE_ID = CLIENT_EVENT.MOD_LOAD_FINISH
