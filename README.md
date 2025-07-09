@@ -70,7 +70,7 @@ class TestMod1(object):
 ```
 
 ### QuMod3-API
-非兼容的独占API, 仅适用于PyScriptEngine。
+非兼容的独占API，仅适用于PyScriptEngine。
 ```python
 # modMain.py
 from mod.qumod3.api import EventBus, ServerInit, ClientInit
