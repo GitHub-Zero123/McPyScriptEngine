@@ -62,6 +62,7 @@ public class PyScriptEngine
         {
             serverInit = true;
             ModLoader.loadServerThread();
+            EventManager.callServerEvent(-2);
         }
     }
 
@@ -104,6 +105,7 @@ public class PyScriptEngine
             LOGGER.info("[ENGINE] 客户端初始化");
             clientInit = true;
             ModLoader.loadClientThread();
+            EventManager.callClientEvent(-2);
         }
     }
 

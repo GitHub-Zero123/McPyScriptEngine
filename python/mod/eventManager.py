@@ -101,7 +101,9 @@ class EventManager:
         return self.unRegEventHandler(event, EventHandler(func, priority))
 
 class SERVER_EVENT:
+    MOD_LOAD_FINISH = -2
     NETWORK_PACKET_RECEIVED = -1
+    UNKNOWN = -100
     SERVER_TICK_PRE = 0
     SERVER_TICK_POST = 1    # Tick事件
     RIGHT_CLICK_ITEM = 2    # 物品尝试使用
@@ -109,7 +111,9 @@ class SERVER_EVENT:
     ENTITY_LEAVE_LEVEL = 4  # 实体离开世界
 
 class CLIENT_EVENT:
+    MOD_LOAD_FINISH = -2
     NETWORK_PACKET_RECEIVED = -1
+    UNKNOWN = -100
     CLIENT_TICK_PRE = 0
     CLIENT_TICK_POST = 1    # Tick事件
     RIGHT_CLICK_ITEM = 2    # 物品尝试使用
@@ -131,6 +135,9 @@ _MC_EVENT_MAPPING_TABLE = {
     # 网络包接收事件
     "ServerboundPacketReceivedEvent": SERVER_EVENT.NETWORK_PACKET_RECEIVED,
     "ClientboundPacketReceivedEvent": CLIENT_EVENT.NETWORK_PACKET_RECEIVED,
+    # MOD加载完成事件
+    "LoadServerAddonScriptsAfter": SERVER_EVENT.MOD_LOAD_FINISH,
+    "LoadClientAddonScriptsAfter": CLIENT_EVENT.MOD_LOAD_FINISH,
 }
 
 class EngineEventManager(EventManager):
