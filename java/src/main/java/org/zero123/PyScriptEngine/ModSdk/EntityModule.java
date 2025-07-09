@@ -66,6 +66,21 @@ public class EntityModule
         return Utils.arrayToString(posArray);
     }
 
+    // 客户端获取实体坐标
+    public static String _clientGetEntityPos(String entityId)
+    {
+        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        if(entityOpt.isEmpty())
+        {
+            return "";
+        }
+        final var pos = entityOpt.get().position();
+        Double[] posArray = new Double[] {
+                pos.x, pos.y, pos.z
+        };
+        return Utils.arrayToString(posArray);
+    }
+
     // 设置实体坐标
     public static void _serverSetEntityPos(String entityId, String posBytes)
     {
@@ -96,10 +111,33 @@ public class EntityModule
         return "";
     }
 
+    // 客户端获取实体旋转角
+    public static String _clientGetEntityRot(String entityId)
+    {
+        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        if(entityOpt.isPresent())
+        {
+            final var entity = entityOpt.get();
+            return Utils.arrayToString(new Float[] { entity.getXRot(), entity.getYRot() });
+        }
+        return "";
+    }
+
     // 获取实体的标识符
     public static String _serverGetEntityTypeName(String entityId)
     {
         var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        if(entityOpt.isPresent())
+        {
+            return EntityType.getKey(entityOpt.get().getType()).toString();
+        }
+        return "";
+    }
+
+    // 客户端获取实体标识符
+    public static String _clientGetEntityTypeName(String entityId)
+    {
+        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             return EntityType.getKey(entityOpt.get().getType()).toString();
@@ -121,10 +159,31 @@ public class EntityModule
         return 0;
     }
 
+    // 客户端判断实体是不是玩家
+    public static int _clientCheckIsPlayer(String entityId)
+    {
+        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        if(entityOpt.isPresent())
+        {
+            if(entityOpt.get() instanceof Player)
+            {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     // 判断实体是否存在
     public static int _serverCheckEntityAlive(String entityId)
     {
         var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        return entityOpt.isPresent() ? 1 : 0;
+    }
+
+    // 客户端判断实体是否存在
+    public static int _clientCheckEntityAlive(String entityId)
+    {
+        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
         return entityOpt.isPresent() ? 1 : 0;
     }
 
@@ -141,7 +200,7 @@ public class EntityModule
                 for (Entity entity : level.getEntities().getAll())
                 {
                     // 过滤“加载中”实体通常就是所有实体，因为只存在已加载的实体
-                    builder.append(entity.getUUID().toString()).append(' ');
+                    builder.append(entity.getUUID()).append(' ');
                 }
             }
         }

@@ -1,12 +1,17 @@
 from ..api.entityModule import (
     _serverCheckIsPlayer,
+    _clientCheckIsPlayer,
     _serverCheckEntityAlive,
+    _clientCheckEntityAlive,
     _serverDestroyEntity,
     _serverKillEntity,
     _serverGetEntityTypeName,
+    _clientGetEntityTypeName,
     _serverGetEntityPos,
+    _clientGetEntityPos,
     _serverSetEntityPos,
     _serverGetEntityRot,
+    _clientGetEntityRot,
     _setCommand,
     _serverGetWorldEntityList,
     _serverGetAllPlayerId,
@@ -26,7 +31,7 @@ class Position:
         if not self._entityId:
             return None
         if _ModLoader.isClientThread():
-            return None
+            return _clientGetEntityPos(self._entityId)
         return _serverGetEntityPos(self._entityId)
 
     def setPos(self, value: tuple):
@@ -47,7 +52,7 @@ class Rotation:
         if not self._entityId:
             return None
         if _ModLoader.isClientThread():
-            return None
+            return _clientGetEntityRot(self._entityId)
         return _serverGetEntityRot(self._entityId)
 
     def setRotation(self, value: tuple):
@@ -172,17 +177,17 @@ class ClientEntity(Entity):
     def getTypeName(self):
         if not self.entityId:
             return ""
-        return ""
+        return _clientGetEntityTypeName(self.entityId)
 
     def isAlive(self):
         if not self.entityId:
             return False
-        return False
+        return _clientCheckEntityAlive(self.entityId)
 
     def isPlayer(self):
         if not self.entityId:
             return False
-        return False
+        return _clientCheckIsPlayer(self.entityId)
 
     @staticmethod
     def getWorldEntities() -> list['ClientEntity']:
@@ -248,7 +253,7 @@ class ServerEntity(Entity):
     @staticmethod
     def getWorldEntities() -> list['ServerEntity']:
         return Entity.getWorldEntities()
-    
+
     @staticmethod
     def getAllPlayer() -> list['ServerEntity']:
         return Entity.getAllPlayer()

@@ -12,6 +12,12 @@ def _serverGetEntityPos(entityId: str):
         entityId
     ))
 
+def _clientGetEntityPos(entityId: str):
+    """ 客户端获取实体位置 """
+    return floatSplit(findJavaCls(_ENTITY_MODULE, "_clientGetEntityPos", [CAST_TYPE.STRING], CAST_TYPE.STRING).call(
+        entityId
+    ))
+
 def _serverSetEntityPos(entityId: str, pos: tuple):
     """ 设置实体位置 """
     return findJavaCls(_ENTITY_MODULE, "_serverSetEntityPos", [CAST_TYPE.STRING, CAST_TYPE.STRING], CAST_TYPE.VOID).call(
@@ -21,6 +27,11 @@ def _serverSetEntityPos(entityId: str, pos: tuple):
 def _serverGetEntityRot(entityId: str):
     """ 获取实体旋转欧拉角 """
     return floatSplit(findJavaCls(_ENTITY_MODULE, "_serverGetEntityRot", [CAST_TYPE.STRING], CAST_TYPE.STRING).call(
+        entityId
+    ))
+
+def _clientGetEntityRot(entityId: str):
+    return floatSplit(findJavaCls(_ENTITY_MODULE, "_clientGetEntityRot", [CAST_TYPE.STRING], CAST_TYPE.STRING).call(
         entityId
     ))
 
@@ -36,15 +47,33 @@ def _serverGetEntityTypeName(entityId: str) -> str:
         entityId
     )
 
+def _clientGetEntityTypeName(entityId: str) -> str:
+    """ 客户端获取实体类型名称(标识符) """
+    return findJavaCls(_ENTITY_MODULE, "_clientGetEntityTypeName", [CAST_TYPE.STRING], CAST_TYPE.STRING).call(
+        entityId
+    )
+
 def _serverCheckIsPlayer(entityId: str) -> bool:
     """ 检查实体是否为玩家 """
     return bool(findJavaCls(_ENTITY_MODULE, "_serverCheckIsPlayer", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
         entityId
     ))
 
+def _clientCheckIsPlayer(entityId: str) -> bool:
+    """ 客户端检查实体是否为玩家 """
+    return bool(findJavaCls(_ENTITY_MODULE, "_clientCheckIsPlayer", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
+        entityId
+    ))
+
 def _serverCheckEntityAlive(entityId: str) -> bool:
     """ 检查实体是否存活 """
     return bool(findJavaCls(_ENTITY_MODULE, "_serverCheckEntityAlive", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
+        entityId
+    ))
+
+def _clientCheckEntityAlive(entityId: str) -> bool:
+    """ 客户端检查实体是否存活 """
+    return bool(findJavaCls(_ENTITY_MODULE, "_clientCheckEntityAlive", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
         entityId
     ))
 
