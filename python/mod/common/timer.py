@@ -55,3 +55,31 @@ class TimerManager:
             del self._tasks[task]
             return True
         return False
+
+class ServerTimerManager(TimerManager):
+    _INSTANCE = None
+
+    @staticmethod
+    def getInstance():
+        if ServerTimerManager._INSTANCE is None:
+            ServerTimerManager._INSTANCE = ServerTimerManager()
+        return ServerTimerManager._INSTANCE
+
+    def __init__(self):
+        super().__init__()
+        from ..server.system.serverSystem import ServerSystemManager
+        ServerSystemManager.getInstance().listenForEvent(("Minecraft", "Engine", "OnScriptTickServer"), self.update)
+
+class ClientTimerManager(TimerManager):
+    _INSTANCE = None
+
+    @staticmethod
+    def getInstance():
+        if ClientTimerManager._INSTANCE is None:
+            ClientTimerManager._INSTANCE = ClientTimerManager()
+        return ClientTimerManager._INSTANCE
+
+    def __init__(self):
+        super().__init__()
+        from ..client.system.clientSystem import ClientSystemManager
+        ClientSystemManager.getInstance().listenForEvent(("Minecraft", "Engine", "OnScriptTickClient"), self.update)

@@ -1,4 +1,5 @@
 from .event.base import BaseEvent
+from ..common.timer import TimerManager
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 lambda: "By Zero123"
 
@@ -31,3 +32,12 @@ def ClientDestroy(func):
     """ 注册客户端销毁函数(支持动态注册) """
     _ModLoader.regClientDestroyHandler(func)
     return func
+
+def getThreadLocalTimer() -> TimerManager:
+    """ 获取全局定时管理器(在不同线程下获取返回不同实例) """
+    if _ModLoader.isServerThread():
+        from ..common.timer import ServerTimerManager
+        return ServerTimerManager.getInstance()
+    else:
+        from ..common.timer import ClientTimerManager
+        return ClientTimerManager.getInstance()
