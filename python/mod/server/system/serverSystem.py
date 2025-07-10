@@ -2,6 +2,7 @@ from ...systemManager import BaseSystem, SystemManager
 from ...eventManager import EngineEventManager
 from ...utils import packSystemPacket, decodeJsonPacket
 from ...api import network
+lambda: "By Zero123"
 
 class ServerSystem(BaseSystem):
     def BroadcastToAllClient(self, eventName: str, sendData: dict):

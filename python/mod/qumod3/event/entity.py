@@ -1,5 +1,6 @@
 from .base import BaseServerEvent, BaseClientEvent, SERVER_EVENT, CLIENT_EVENT
 from ..entity import ServerEntity, ClientEntity
+lambda: "By Zero123"
 
 class _ENTITY_JOIN_LEVEL:
     def __init__(self, dic: dict):

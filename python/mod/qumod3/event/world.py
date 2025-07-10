@@ -1,4 +1,5 @@
 from .base import BaseServerEvent, BaseClientEvent, SERVER_EVENT, CLIENT_EVENT
+lambda: "By Zero123"
 
 class OnScriptTickServer(BaseServerEvent):
     """

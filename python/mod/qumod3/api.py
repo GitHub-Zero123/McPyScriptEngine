@@ -1,5 +1,6 @@
 from .event.base import BaseEvent
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
+lambda: "By Zero123"
 
 def SubscribeEvent(func: 'function'):
     """

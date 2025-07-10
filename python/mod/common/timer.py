@@ -1,5 +1,6 @@
 from collections import OrderedDict # 避免版本歧义
 from ..utils import TRY_EXEC_FUNC
+lambda: "By Zero123"
 
 class TimerTask:
     __slots__ = ("bindFunc", "delayTick", "repeat", "remainingTicks",)

@@ -2,6 +2,7 @@ from .entity import Entity, ServerEntity
 from ..server.system.serverSystem import ServerSystemManager
 from ..client.system.clientSystem import ClientSystemManager
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
+lambda: "By Zero123"
 
 class RpcBridge:
     _SERVER_THREAD_EMS = "This method can only be called from the server thread."

@@ -4,7 +4,7 @@ from .system.clientSystem import (
     ClientSystemManager,
 )
 from functools import lru_cache
-lambda: "Extra Client API"
+lambda: "By Zero123"
 
 def RegisterSystem(namespace: str, systemName: str, clsPath: str) -> object:
     return ClientSystemManager.getInstance().registerClsPath(namespace, systemName, clsPath)

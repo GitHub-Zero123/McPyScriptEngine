@@ -1,6 +1,7 @@
 from ...eventManager import EventGroup, EventHandler, SERVER_EVENT, CLIENT_EVENT
 from ...server.system.serverSystem import ServerSystemManager
 from ...client.system.clientSystem import ClientSystemManager
+lambda: "By Zero123"
 
 class BaseEvent:
     @classmethod

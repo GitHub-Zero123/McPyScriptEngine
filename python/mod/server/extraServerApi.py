@@ -4,7 +4,7 @@ from .system.serverSystem import (
     ServerSystemManager,
 )
 from functools import lru_cache
-lambda: "Extra Server API"
+lambda: "By Zero123"
 
 def RegisterSystem(namespace: str, systemName: str, clsPath: str) -> object:
     return ServerSystemManager.getInstance().registerClsPath(namespace, systemName, clsPath)

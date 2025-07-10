@@ -6,6 +6,7 @@ from ..api.entityModule import (
 )
 from ..common.timer import TimerManager, TimerTask
 from functools import lru_cache
+lambda: "By Zero123"
 
 class GameEngineComp:
     def __init__(self, levelId: str):

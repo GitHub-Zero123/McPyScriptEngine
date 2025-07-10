@@ -21,6 +21,7 @@ from ..api.entityModule import (
 )
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 import PyMCBridge.Math as _Math # type: ignore
+lambda: "By Zero123"
 
 class Position:
     def __init__(self, entityId):
