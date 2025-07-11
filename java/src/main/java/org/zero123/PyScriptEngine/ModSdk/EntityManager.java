@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Optional;
@@ -116,6 +117,15 @@ public class EntityManager
         {
             return Optional.empty();
         }
+    }
+
+    public static String getEntityStrId(@Nullable Entity entity)
+    {
+        if(entity == null)
+        {
+            return "";
+        }
+        return entity.getUUID().toString();
     }
 
     /**

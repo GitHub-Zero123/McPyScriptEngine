@@ -16,7 +16,7 @@ public class ItemEvent
         data.addProperty("playerId", event.getEntity().getUUID().toString());
         data.add("itemDict", ItemManager.itemToJson(item));
         data.addProperty("cancel", false);
-        JsonObject retJson = null;
+        JsonObject retJson;
         if (event.getLevel().isClientSide())
         {
             // 客户端触发

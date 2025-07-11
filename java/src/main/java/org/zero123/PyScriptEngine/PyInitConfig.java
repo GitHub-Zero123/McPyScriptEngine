@@ -19,7 +19,7 @@ public class PyInitConfig
     };
     // 调试目标modName
     static final String[] _debugTargetMods = {
-        "testMod_2", "gameLog"
+        "gameLog", "testMod_2"
     };
     // 是否使用调试信息
     static boolean debugMode = true;

@@ -109,6 +109,10 @@ class SERVER_EVENT:
     RIGHT_CLICK_ITEM = 2    # 物品尝试使用
     ENTITY_JOIN_LEVEL = 3   # 实体加入世界
     ENTITY_LEAVE_LEVEL = 4  # 实体离开世界
+    # 服务端生物受伤事件
+    LIVING_INCOMING_DAMAGE = 100     # 生物受到伤害前(未计算护甲值)
+    LIVING_DAMAGE_PRE = 101          # 生物受到伤害前(已计算护甲值)
+    LIVING_DAMAGE_POST = 102         # 生物受到伤害后(已计算护甲值)
 
 class CLIENT_EVENT:
     MOD_LOAD_FINISH = -2
@@ -132,6 +136,10 @@ _MC_EVENT_MAPPING_TABLE = {
     "AddEntityClientEvent": CLIENT_EVENT.ENTITY_JOIN_LEVEL,
     "EntityRemoveEvent": SERVER_EVENT.ENTITY_LEAVE_LEVEL,
     "RemoveEntityClientEvent": CLIENT_EVENT.ENTITY_LEAVE_LEVEL,
+    # 生物受伤事件
+    "DamageEvent": SERVER_EVENT.LIVING_INCOMING_DAMAGE,
+    "ActuallyHurtServerEvent": SERVER_EVENT.LIVING_DAMAGE_PRE,
+    "ActorHurtServerEvent": SERVER_EVENT.LIVING_DAMAGE_POST,
     # 网络包接收事件
     "ServerboundPacketReceivedEvent": SERVER_EVENT.NETWORK_PACKET_RECEIVED,
     "ClientboundPacketReceivedEvent": CLIENT_EVENT.NETWORK_PACKET_RECEIVED,

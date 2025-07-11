@@ -79,9 +79,9 @@ def onScriptTickClient(event: OnScriptTickClient):
     pass
 
 @ServerInit
-def serverInit():
-    pass
+def onServerInit():
+    from . import hurtEventTest    # 加载 hurtEventTest 模块
 
 @ClientInit
-def clientInit():
+def onClientInit():
     pass
