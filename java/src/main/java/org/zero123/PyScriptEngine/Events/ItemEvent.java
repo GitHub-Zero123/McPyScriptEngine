@@ -15,14 +15,23 @@ public class ItemEvent
         var data = new JsonObject();
         data.addProperty("playerId", event.getEntity().getUUID().toString());
         data.add("itemDict", ItemManager.itemToJson(item));
-        data.addProperty("cancel", false); // 暂不支持cancel
+        data.addProperty("cancel", false);
+        JsonObject retJson = null;
         if (event.getLevel().isClientSide())
         {
             // 客户端触发
-            EventManager.callClientJsonEvent(2, data.toString());
+            retJson = EventManager.Client.callEvent(2, data, new String[]{"cancel"});
         } else {
             // 服务端触发
-            EventManager.callServerJsonEvent(2, data.toString());
+            retJson = EventManager.Server.callEvent(2, data, new String[]{"cancel"});
+        }
+        final var cancel = retJson.get("cancel");
+        if (cancel != null && cancel.isJsonPrimitive() && cancel.getAsJsonPrimitive().isBoolean())
+        {
+            if(cancel.getAsBoolean())
+            {
+                event.setCanceled(true);
+            }
         }
     }
 }

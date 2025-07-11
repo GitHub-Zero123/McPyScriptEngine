@@ -4,6 +4,7 @@ lambda: "By Zero123"
 
 class _RIGHT_CLICK_ITEM:
     def __init__(self, dic: dict):
+        self._args = dic
         self.playerId: str = dic.get("playerId", "")
         self.itemDict: dict = dic.get("itemDict", {})
 
@@ -13,6 +14,12 @@ class _RIGHT_CLICK_ITEM:
         :return: 物品名称
         """
         return self.itemDict.get("newItemName", "")
+
+    def setCanceled(self):
+        """
+        设置取消物品使用
+        """
+        self._args["cancel"] = True
 
 class ServerItemTryUseEvent(BaseServerEvent, _RIGHT_CLICK_ITEM):
     """

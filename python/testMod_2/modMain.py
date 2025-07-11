@@ -1,6 +1,6 @@
 from mod.qumod3.api import SubscribeEvent, ServerInit, ClientInit
 from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
-from mod.qumod3.event.item import ServerItemTryUseEvent
+from mod.qumod3.event.item import ServerItemTryUseEvent, ClientItemTryUseEvent
 from mod.qumod3.event.entity import AddEntityServerEvent
 from mod.qumod3.entity import ServerEntity, ClientEntity
 from mod.qumod3.rpc import RpcBridge
@@ -47,6 +47,17 @@ def onItemTryUseServer(event: ServerItemTryUseEvent):
         player = event.getEntity()
         rpc.callClient(player, clientTestFunc, {"message": "Hello from server!"})
 
+    if "apple" in event.getItemName():
+        print("【服务端】禁止使用苹果！")
+        event.setCanceled()
+
+@SubscribeEvent
+def onItemTryUseClient(event: ClientItemTryUseEvent):
+    if "apple" in event.getItemName():
+        # 取消物品使用需要双端同时进行
+        print("【客户端】禁止使用苹果！")
+        event.setCanceled()
+
 @SubscribeEvent
 def onAddEntityServer(event: AddEntityServerEvent):
     if event.getEngineTypeStr() != "minecraft:player":
@@ -56,7 +67,8 @@ def onAddEntityServer(event: AddEntityServerEvent):
     player.sendMessage("§e[提示] testMod_2 已完成加载！")
     player.sendMessage("§b1.§f 右键使用 §c钻石剑 §f→ §6秒杀全部生物")
     player.sendMessage("§b2.§f 右键使用 §a钻石 §f→ §d发射一只苦力怕")
-    player.sendMessage("§b3.§f §e哈斯克僵尸 §f现在会远程扔出存活一定时间的§e僵尸")
+    player.sendMessage("§b3.§f 右键使用 §c钻石斧 §f→ §aRPC调用客户端函数")
+    player.sendMessage("§b4.§f 右键使用 §a苹果 §f→ §c禁止使用苹果")
 
 @SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):

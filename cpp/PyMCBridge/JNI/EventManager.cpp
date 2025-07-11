@@ -64,3 +64,63 @@ JNIEXPORT void JNICALL Java_org_zero123_PyMcBridge_EventManager_callClientJsonEv
 	auto pyDict = parseJsonString(QPyMCBridge::JNI::jStringToStdString(env, json));
 	QPyMCBridge::callArgsClientEvent(eventId, pyDict);
 }
+
+template <typename HasHandlerFunc, typename CallEventFunc>
+jstring callEventCapTemplate(
+	JNIEnv* env,
+	jint eventId,
+	jstring json,
+	jobjectArray capKeys,
+	HasHandlerFunc hasHandler,
+	CallEventFunc callEvent)
+{
+	if (!hasHandler(eventId))
+	{
+		return env->NewStringUTF("{}");
+	}
+
+	py::gil_scoped_acquire gil;
+	auto pyDict = parseJsonString(QPyMCBridge::JNI::jStringToStdString(env, json));
+	std::vector<std::string> targetCapKey = QPyMCBridge::JNI::convertJStringArray(env, capKeys);
+	std::unordered_map<std::string, py::object> capMap;	// 捕获初始值Map
+	for (const auto& key : targetCapKey)
+	{
+		if (pyDict.contains(key.c_str()))
+		{
+			capMap[key] = pyDict[key.c_str()];
+		}
+	}
+
+	// 广播事件
+	callEvent(eventId, pyDict);
+
+	py::dict capChanges;
+	for (const auto& it : capMap)
+	{
+		// 检查变化情况
+		if (pyDict.contains(it.first.c_str()) &&
+			!pyDict[it.first.c_str()].cast<py::object>().equal(it.second))
+		{
+			capChanges[it.first.c_str()] = pyDict[it.first.c_str()];
+		}
+	}
+
+	if (capChanges.empty())
+	{
+		return env->NewStringUTF("{}");
+	}
+
+	py::object joModule = py::module_::import("json");
+	std::string result = joModule.attr("dumps")(capChanges).cast<std::string>();
+	return env->NewStringUTF(result.c_str());
+}
+
+jstring JNICALL Java_org_zero123_PyMcBridge_EventManager_callServerEventCap(JNIEnv* env, jclass, jint eventId, jstring json, jobjectArray capKeys)
+{
+	return callEventCapTemplate(env, eventId, json, capKeys, QPyMCBridge::hasServerEventHandler, QPyMCBridge::callArgsServerEvent);
+}
+
+jstring JNICALL Java_org_zero123_PyMcBridge_EventManager_callClientEventCap(JNIEnv* env, jclass, jint eventId, jstring json, jobjectArray capKeys)
+{
+	return callEventCapTemplate(env, eventId, json, capKeys, QPyMCBridge::hasClientEventHandler, QPyMCBridge::callArgsClientEvent);
+}

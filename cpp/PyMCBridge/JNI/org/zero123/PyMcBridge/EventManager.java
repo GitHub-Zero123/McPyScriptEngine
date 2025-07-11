@@ -10,6 +10,8 @@ public class EventManager
     public static native void callClientEvent(int eventId);
     public static native void callServerJsonEvent(int eventId, String json);
     public static native void callClientJsonEvent(int eventId, String json);
+    public static native String callServerEventCap(int eventId, String json, String[] captureKeys);
+    public static native String callClientEventCap(int eventId, String json, String[] captureKeys);
 
     static {
         System.loadLibrary("PyMCBridge");

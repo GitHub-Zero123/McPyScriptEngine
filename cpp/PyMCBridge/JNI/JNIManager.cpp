@@ -196,6 +196,44 @@ public:
         return result;
     }
 
+    // float返回值处理
+    float callStaticFloatMethod(const std::vector<jvalue>& args) const
+    {
+        JNIEnv* env = QPyMCBridge::JNI::getJNIEnv();
+        if (!env || !valid())
+        {
+            throw std::runtime_error("无效的JVM对象");
+        }
+
+        jfloat result = env->CallStaticFloatMethodA(cls_, methodId_, args.data());
+        if (env->ExceptionCheck())
+        {
+            env->ExceptionDescribe();
+            env->ExceptionClear();
+            throw std::runtime_error("JVM函数调用异常");
+        }
+        return result;
+    }
+
+    // 无参版本
+    float callStaticFloatMethod() const
+    {
+        JNIEnv* env = QPyMCBridge::JNI::getJNIEnv();
+        if (!env || !valid())
+        {
+            throw std::runtime_error("无效的JVM对象");
+        }
+
+        jfloat result = env->CallStaticFloatMethod(cls_, methodId_);
+        if (env->ExceptionCheck())
+        {
+            env->ExceptionDescribe();
+            env->ExceptionClear();
+            throw std::runtime_error("JVM函数调用异常");
+        }
+        return result;
+    }
+
     void callStaticVoidMethod(const std::vector<jvalue>& args) const
     {
         JNIEnv* env = QPyMCBridge::JNI::getJNIEnv();
@@ -237,6 +275,7 @@ enum CAST_TYPE
     VOID = 0,
     INT = 1,
     STRING = 2,
+    FLOAT = 3,
 };
 
 static std::string getJavaSignature(const std::vector<CAST_TYPE>& paramTypes, CAST_TYPE returnType)
@@ -258,6 +297,9 @@ static std::string getJavaSignature(const std::vector<CAST_TYPE>& paramTypes, CA
         case CAST_TYPE::STRING:
             sig += "Ljava/lang/String;";
             break;
+        case CAST_TYPE::FLOAT:    // 新增Float支持
+            sig += "F";
+            break;
         default:
             throw std::invalid_argument("Unsupported CAST_TYPE in parameters");
         }
@@ -275,6 +317,9 @@ static std::string getJavaSignature(const std::vector<CAST_TYPE>& paramTypes, CA
         break;
     case CAST_TYPE::STRING:
         sig += "Ljava/lang/String;";
+        break;
+    case CAST_TYPE::FLOAT:     // 新增FLOAT支持
+        sig += "F";
         break;
     default:
         throw std::invalid_argument("Unsupported CAST_TYPE in return type");
@@ -335,6 +380,11 @@ public:
                 localStrRefs.push_back(jstr);
                 break;
             }
+
+            case CAST_TYPE::FLOAT:
+                // FLOAT支持
+                jargs[i].f = args[i].cast<float>();
+                break;
 
             default:
                 throw std::runtime_error("不支持的参数类型");
@@ -406,6 +456,22 @@ public:
                     env->ReleaseStringUTFChars(jstr, cstr);
                     env->DeleteLocalRef(jstr);
                 }
+                break;
+            }
+
+            case CAST_TYPE::FLOAT:
+            {
+                float res = 0.0f;
+                if (jargs.empty())
+                {
+                    res = callStaticFloatMethod();
+                }
+                else
+                {
+                    res = callStaticFloatMethod(jargs);
+                }
+                gil.reset();
+                retVal = py::float_(res);
                 break;
             }
 
@@ -508,6 +574,7 @@ namespace QPyMCBridge
                 .value("VOID", CAST_TYPE::VOID)
                 .value("INT", CAST_TYPE::INT)
                 .value("STRING", CAST_TYPE::STRING)
+                .value("FLOAT", CAST_TYPE::FLOAT)
                 .export_values();
 
             py::class_<PyCastJVMFunction>(jniModule, "PyCastJVMFunction")
