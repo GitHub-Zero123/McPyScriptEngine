@@ -1,4 +1,4 @@
-from .jni import findJavaCls, CAST_TYPE, floatSplit, numberTupleJoin
+from .jni import findJavaCls, CAST_TYPE, floatSplit, numberTupleJoin, ClientOnly
 from json import dumps
 lambda: "By Zero123"
 
@@ -83,6 +83,18 @@ def _serverGetWorldEntityList() -> list:
     if not data:
         return []
     return list(data.split(" "))
+
+def _clientGetWorldEntityList() -> list:
+    """ 客户端获取世界实体id列表 """
+    data = str(findJavaCls(_ENTITY_MODULE, "_clientGetWorldEntityList", [], CAST_TYPE.STRING).call())
+    if not data:
+        return []
+    return list(data.split(" "))
+
+@ClientOnly
+def _clientGetLocalPlayerId() -> str:
+    """ 客户端获取本地玩家ID """
+    return findJavaCls(_ENTITY_MODULE, "_clientGetLocalPlayerId", [], CAST_TYPE.STRING).call()
 
 def _serverKillEntity(entityId: str) -> bool:
     """ 杀死实体 """

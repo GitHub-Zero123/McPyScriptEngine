@@ -14,7 +14,8 @@ def GetSystem(namespace: str, systemName: str) -> object:
 
 def GetLocalPlayerId() -> str:
     """ 获取本地玩家ID """
-    return ""
+    from ..api.entityModule import _clientGetLocalPlayerId
+    return _clientGetLocalPlayerId()
 
 def GetLevelId() -> str:
     return ""

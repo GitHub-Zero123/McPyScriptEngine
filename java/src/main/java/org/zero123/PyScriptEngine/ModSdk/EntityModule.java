@@ -13,6 +13,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.checkerframework.checker.units.qual.A;
+
+import java.util.ArrayList;
 
 public class EntityModule
 {
@@ -187,11 +190,11 @@ public class EntityModule
         return entityOpt.isPresent() ? 1 : 0;
     }
 
-    // 获取世界实体列表
+    // 【服务端】获取世界实体列表
     public static String _serverGetWorldEntityList()
     {
         MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-        StringBuilder builder = new StringBuilder();
+        ArrayList<String> entityIds = new ArrayList<>();
         if (server != null)
         {
             for (ServerLevel level : server.getAllLevels())
@@ -199,17 +202,38 @@ public class EntityModule
                 // 遍历当前维度所有实体
                 for (Entity entity : level.getEntities().getAll())
                 {
-                    // 过滤“加载中”实体通常就是所有实体，因为只存在已加载的实体
-                    builder.append(entity.getUUID()).append(' ');
+                    entityIds.add(entity.getUUID().toString());
                 }
             }
         }
-        // 去掉最后一个空格
-        if (!builder.isEmpty())
+        return Utils.joinWithSpace(entityIds);
+    }
+
+    // 【客户端】获取加载中的所有实体列表
+    public static String _clientGetWorldEntityList()
+    {
+        final var clientLevel = Minecraft.getInstance().level;
+        ArrayList<String> entityIds = new ArrayList<>();
+        if (clientLevel != null)
         {
-            builder.setLength(builder.length() - 1);
+            // 遍历当前维度所有实体
+            for (Entity entity : clientLevel.entitiesForRendering())
+            {
+                entityIds.add(entity.getUUID().toString());
+            }
         }
-        return builder.toString();
+        return Utils.joinWithSpace(entityIds);
+    }
+
+    // 【客户端】获取本地玩家ID
+    public static String _clientGetLocalPlayerId()
+    {
+        final var player = Minecraft.getInstance().player;
+        if (player != null)
+        {
+            return player.getUUID().toString();
+        }
+        return "";
     }
 
     // 杀死特定实体

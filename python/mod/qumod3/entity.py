@@ -14,10 +14,12 @@ from ..api.entityModule import (
     _clientGetEntityRot,
     _setCommand,
     _serverGetWorldEntityList,
+    _clientGetWorldEntityList,
     _serverGetAllPlayerId,
     _serverGetEntityTargetId,
     _serverSendMessage,
     _clientSendMessage,
+    _clientGetLocalPlayerId,
 )
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 import PyMCBridge.Math as _Math # type: ignore
@@ -161,9 +163,7 @@ class Entity:
 
     @staticmethod
     def getWorldEntities() -> list['Entity']:
-        if _ModLoader.isClientThread():
-            return []
-        return [ServerEntity(entityId) for entityId in _serverGetWorldEntityList()]
+        raise RuntimeError("This method should be overridden in subclasses")
     
     @staticmethod
     def getAllPlayer() -> list['Entity']:
@@ -195,11 +195,17 @@ class ClientEntity(Entity):
 
     @staticmethod
     def getWorldEntities() -> list['ClientEntity']:
-        return Entity.getWorldEntities()
+        """ 获取客户端世界中的所有实体(渲染区块内的) """
+        return [ClientEntity(entityId) for entityId in _clientGetWorldEntityList()]
 
+    # @staticmethod
+    # def getAllPlayer() -> list['ClientEntity']:
+    #     return Entity.getAllPlayer()
+    
     @staticmethod
-    def getAllPlayer() -> list['ClientEntity']:
-        return Entity.getAllPlayer()
+    def getLocalPlayer() -> 'ClientEntity':
+        """ 获取本地玩家实体对象"""
+        return ClientEntity(_clientGetLocalPlayerId())
 
 class ServerEntity(Entity):
     def __init__(self, entityId):
@@ -256,7 +262,8 @@ class ServerEntity(Entity):
 
     @staticmethod
     def getWorldEntities() -> list['ServerEntity']:
-        return Entity.getWorldEntities()
+        """ 获取服务端世界中的所有实体 """
+        return [ServerEntity(entityId) for entityId in _serverGetWorldEntityList()]
 
     @staticmethod
     def getAllPlayer() -> list['ServerEntity']:

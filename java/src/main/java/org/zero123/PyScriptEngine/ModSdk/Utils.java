@@ -1,5 +1,7 @@
 package org.zero123.PyScriptEngine.ModSdk;
 
+import java.util.ArrayList;
+
 public class Utils
 {
     public static <T> String arrayToString(T[] obs)
@@ -33,5 +35,21 @@ public class Utils
             result[i] = Double.parseDouble(parts[i]);
         }
         return result;
+    }
+
+    // 拼接字符串列表
+    public static String joinWithSpace(ArrayList<String> list)
+    {
+        if (list == null || list.isEmpty())
+        {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String s : list)
+        {
+            builder.append(s).append(' ');
+        }
+        builder.setLength(builder.length() - 1); // 移除最后一个空格
+        return builder.toString();
     }
 }

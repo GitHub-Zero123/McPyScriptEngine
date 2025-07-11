@@ -1,5 +1,6 @@
-# -*- coding: utf-8 -*-
+import functools
 from PyMCBridge.JNI import PyCastJVMFunction, CAST_TYPE # type: ignore
+import PyMCBridge.ModLoader as _ModLoader # type: ignore
 lambda: "By Zero123"
 # 由于JNI自身的性能问题, 完全在CPP上实现获得的提升微忽慎微, 且不利于维护, 因此直接绑定给Python动态调用与缓存
 
@@ -21,3 +22,19 @@ def floatSplit(data: str):
 
 def numberTupleJoin(data: tuple) -> str:
     return " ".join(str(v) for v in data)
+
+def ClientOnly(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not _ModLoader.isClientThread():
+            raise RuntimeError(f"函数 {func.__name__} 只能在客户端调用！")
+        return func(*args, **kwargs)
+    return wrapper
+
+def ServerOnly(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if not _ModLoader.isServerThread():
+            raise RuntimeError(f"函数 {func.__name__} 只能在服务端调用！")
+        return func(*args, **kwargs)
+    return wrapper
