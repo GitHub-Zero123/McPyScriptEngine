@@ -1,26 +1,4 @@
-from ..api.entityModule import (
-    _serverCheckIsPlayer,
-    _clientCheckIsPlayer,
-    _serverCheckEntityAlive,
-    _clientCheckEntityAlive,
-    _serverDestroyEntity,
-    _serverKillEntity,
-    _serverGetEntityTypeName,
-    _clientGetEntityTypeName,
-    _serverGetEntityPos,
-    _clientGetEntityPos,
-    _serverSetEntityPos,
-    _serverGetEntityRot,
-    _clientGetEntityRot,
-    _setCommand,
-    _serverGetWorldEntityList,
-    _clientGetWorldEntityList,
-    _serverGetAllPlayerId,
-    _serverGetEntityTargetId,
-    _serverSendMessage,
-    _clientSendMessage,
-    _clientGetLocalPlayerId,
-)
+from ..api import entityModule as _entityModule
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 import PyMCBridge.Math as _Math # type: ignore
 lambda: "By Zero123"
@@ -34,8 +12,8 @@ class Position:
         if not self._entityId:
             return None
         if _ModLoader.isClientThread():
-            return _clientGetEntityPos(self._entityId)
-        return _serverGetEntityPos(self._entityId)
+            return _entityModule._clientGetEntityPos(self._entityId)
+        return _entityModule._serverGetEntityPos(self._entityId)
 
     def setPos(self, value: tuple):
         """
@@ -44,7 +22,7 @@ class Position:
         """
         if _ModLoader.isClientThread():
             return None
-        return _serverSetEntityPos(self._entityId, value)
+        return _entityModule._serverSetEntityPos(self._entityId, value)
 
 class Rotation:
     def __init__(self, entityId):
@@ -55,8 +33,8 @@ class Rotation:
         if not self._entityId:
             return None
         if _ModLoader.isClientThread():
-            return _clientGetEntityRot(self._entityId)
-        return _serverGetEntityRot(self._entityId)
+            return _entityModule._clientGetEntityRot(self._entityId)
+        return _entityModule._serverGetEntityRot(self._entityId)
 
     def setRotation(self, value: tuple):
         """
@@ -151,9 +129,9 @@ class Entity:
         if not self.entityId:
             return
         if _ModLoader.isClientThread():
-            _clientSendMessage(self.entityId, msg)
+            _entityModule._clientSendMessage(self.entityId, msg)
             return
-        _serverSendMessage(self.entityId, msg)
+        _entityModule._serverSendMessage(self.entityId, msg)
 
     def asServerEntity(self) -> 'ServerEntity':
         return self
@@ -167,9 +145,7 @@ class Entity:
     
     @staticmethod
     def getAllPlayer() -> list['Entity']:
-        if _ModLoader.isClientThread():
-            return []
-        return [ServerEntity(entityId) for entityId in _serverGetAllPlayerId()]
+        raise RuntimeError("This method should be overridden in subclasses")
 
 class ClientEntity(Entity):
     def __init__(self, entityId):
@@ -178,12 +154,12 @@ class ClientEntity(Entity):
     def getTypeName(self):
         if not self.entityId:
             return ""
-        return _clientGetEntityTypeName(self.entityId)
+        return _entityModule._clientGetEntityTypeName(self.entityId)
 
     def isAlive(self):
         if not self.entityId:
             return False
-        return _clientCheckEntityAlive(self.entityId)
+        return _entityModule._clientCheckEntityAlive(self.entityId)
 
     def hasEntity(self):
         return self.isAlive()
@@ -191,21 +167,21 @@ class ClientEntity(Entity):
     def isPlayer(self):
         if not self.entityId:
             return False
-        return _clientCheckIsPlayer(self.entityId)
+        return _entityModule._clientCheckIsPlayer(self.entityId)
 
     @staticmethod
     def getWorldEntities() -> list['ClientEntity']:
         """ 获取客户端世界中的所有实体(渲染区块内的) """
-        return [ClientEntity(entityId) for entityId in _clientGetWorldEntityList()]
+        return [ClientEntity(entityId) for entityId in _entityModule._clientGetWorldEntityList()]
 
-    # @staticmethod
-    # def getAllPlayer() -> list['ClientEntity']:
-    #     return Entity.getAllPlayer()
-    
+    @staticmethod
+    def getAllPlayer() -> list['ClientEntity']:
+        raise RuntimeError("客户端尚且不支持此功能")
+
     @staticmethod
     def getLocalPlayer() -> 'ClientEntity':
         """ 获取本地玩家实体对象"""
-        return ClientEntity(_clientGetLocalPlayerId())
+        return ClientEntity(_entityModule._clientGetLocalPlayerId())
 
 class ServerEntity(Entity):
     def __init__(self, entityId):
@@ -214,27 +190,27 @@ class ServerEntity(Entity):
     def getTypeName(self):
         if not self.entityId:
             return ""
-        return _serverGetEntityTypeName(self.entityId)
+        return _entityModule._serverGetEntityTypeName(self.entityId)
 
     def isAlive(self):
         if not self.entityId:
             return False
-        return _serverCheckEntityAlive(self.entityId)
+        return _entityModule._serverCheckEntityAlive(self.entityId)
 
     def kill(self):
         if not self.entityId:
             return False
-        return _serverKillEntity(self.entityId)
+        return _entityModule._serverKillEntity(self.entityId)
 
     def destroy(self):
         if not self.entityId:
             return False
-        return _serverDestroyEntity(self.entityId)
+        return _entityModule._serverDestroyEntity(self.entityId)
 
     def isPlayer(self):
         if not self.entityId:
             return False
-        return _serverCheckIsPlayer(self.entityId)
+        return _entityModule._serverCheckIsPlayer(self.entityId)
 
     def setCommand(self, command: str, showOutput: bool=False):
         """
@@ -245,7 +221,7 @@ class ServerEntity(Entity):
             return False
         if command.startswith("/"):
             command = command[1:]
-        return _setCommand(command, self.entityId, showOutput)
+        return _entityModule._setCommand(command, self.entityId, showOutput)
 
     def getTargetEntity(self):
         # type: () -> 'ServerEntity | None'
@@ -255,7 +231,7 @@ class ServerEntity(Entity):
         """
         if not self.entityId:
             return None
-        targetId = _serverGetEntityTargetId(self.entityId)
+        targetId = _entityModule._serverGetEntityTargetId(self.entityId)
         if not targetId:
             return None
         return ServerEntity(targetId)
@@ -263,11 +239,11 @@ class ServerEntity(Entity):
     @staticmethod
     def getWorldEntities() -> list['ServerEntity']:
         """ 获取服务端世界中的所有实体 """
-        return [ServerEntity(entityId) for entityId in _serverGetWorldEntityList()]
+        return [ServerEntity(entityId) for entityId in _entityModule._serverGetWorldEntityList()]
 
     @staticmethod
     def getAllPlayer() -> list['ServerEntity']:
-        return Entity.getAllPlayer()
+        return [ServerEntity(entityId) for entityId in _entityModule._serverGetAllPlayerId()]
 
 def CREATE_SIDE_ENTITY(entityId: str, isClientSide: bool=False) -> Entity:
     """

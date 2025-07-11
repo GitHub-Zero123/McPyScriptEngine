@@ -1,15 +1,4 @@
-from ..api.entityModule import (
-    _serverSetEntityPos,
-    _serverGetEntityPos,
-    _serverGetEntityRot,
-    _serverShootProjectile,
-    _serverGetEntityTypeName,
-    _serverCheckEntityAlive,
-    _serverKillEntity,
-    _serverGetEntityTargetId,
-    _serverSendMessage,
-    _setCommand,
-)
+from ..api import entityModule as _entityModule
 from ..common.timer import ServerTimerManager, TimerTask
 from functools import lru_cache
 lambda: "By Zero123"
@@ -20,11 +9,11 @@ class EntityPosComp:
 
     def SetPos(self, value: tuple):
         """ 设置实体位置 """
-        return _serverSetEntityPos(self.entityId, value)
+        return _entityModule._serverSetEntityPos(self.entityId, value)
 
     def GetPos(self):
         """ 获取实体位置 """
-        return _serverGetEntityPos(self.entityId)
+        return _entityModule._serverGetEntityPos(self.entityId)
 
 class EntityRotComp:
     def __init__(self, entityId: str):
@@ -32,7 +21,7 @@ class EntityRotComp:
 
     def GetRot(self):
         """ 获取实体旋转欧拉角 """
-        return _serverGetEntityRot(self.entityId)
+        return _entityModule._serverGetEntityRot(self.entityId)
 
 class ProjectileComp:
     def __init__(self, levelId: str):
@@ -42,7 +31,7 @@ class ProjectileComp:
         """ 创建并发射投掷物(param参数参考网易文档) """
         if param is None:
             param = {}
-        return _serverShootProjectile(spawnerId, entityIdentifier, param)
+        return _entityModule._serverShootProjectile(spawnerId, entityIdentifier, param)
 
 class EngineTypeComp:
     def __init__(self, entityId: str):
@@ -50,7 +39,7 @@ class EngineTypeComp:
 
     def GetEngineTypeStr(self):
         """ 获取实体类型名称(标识符) """
-        return _serverGetEntityTypeName(self.entityId)
+        return _entityModule._serverGetEntityTypeName(self.entityId)
 
 class GameEngineComp:
     def __init__(self, levelId: str):
@@ -58,11 +47,11 @@ class GameEngineComp:
 
     def IsEntityAlive(self, entityId: str):
         """ 检查实体是否存活 """
-        return _serverCheckEntityAlive(entityId)
+        return _entityModule._serverCheckEntityAlive(entityId)
 
     def KillEntity(self, entityId: str):
         """ 杀死实体 """
-        return _serverKillEntity(entityId)
+        return _entityModule._serverKillEntity(entityId)
 
     def AddTimer(self, delay: float, func: 'function', *args, **kwargs) -> TimerTask:
         """ 添加定时器 """
@@ -84,7 +73,7 @@ class CommandComp:
         """ 设置执行命令 """
         if cmdStr.startswith("/"):
             cmdStr = cmdStr[1:]
-        return _setCommand(cmdStr, entityId, showOutput)
+        return _entityModule._setCommand(cmdStr, entityId, showOutput)
 
 class ActionComp:
     def __init__(self, entityId: str):
@@ -92,7 +81,7 @@ class ActionComp:
 
     def GetAttackTarget(self):
         """ 获取目标实体ID """
-        return _serverGetEntityTargetId(self.entityId)
+        return _entityModule._serverGetEntityTargetId(self.entityId)
 
 class MsgComp:
     def __init__(self, entityId: str):
@@ -100,7 +89,7 @@ class MsgComp:
 
     def NotifyOneMessage(self, playerId: str, msg: str, color: str=""):
         """ 给指定玩家发送消息 """
-        return _serverSendMessage(playerId, color+msg)
+        return _entityModule._serverSendMessage(playerId, color+msg)
 
 class EngineCompFactory:
     # 实现网易组件工厂

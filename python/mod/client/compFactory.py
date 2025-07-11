@@ -1,9 +1,4 @@
-from ..api.entityModule import (
-    _clientCheckEntityAlive,
-    _clientGetEntityPos,
-    _clientGetEntityRot,
-    _clientGetEntityTypeName,
-)
+from ..api import entityModule as _entityModule
 from ..common.timer import ClientTimerManager, TimerTask
 from functools import lru_cache
 lambda: "By Zero123"
@@ -26,11 +21,11 @@ class GameEngineComp:
     
     def HasEntity(self, entityId: str) -> bool:
         """ 检查实体是否存在 """
-        return _clientCheckEntityAlive(entityId)
+        return _entityModule._clientCheckEntityAlive(entityId)
 
     def IsEntityAlive(self, entityId: str) -> bool:
         """ 检查实体是否存活 """
-        return _clientCheckEntityAlive(entityId)
+        return _entityModule._clientCheckEntityAlive(entityId)
 
 class EngineTypeComp:
     def __init__(self, entityId: str):
@@ -38,7 +33,7 @@ class EngineTypeComp:
 
     def GetEngineTypeStr(self):
         """ 获取实体类型名称(标识符) """
-        return _clientGetEntityTypeName(self.entityId)
+        return _entityModule._clientGetEntityTypeName(self.entityId)
 
 class EntityPosComp:
     def __init__(self, entityId: str):
@@ -46,7 +41,7 @@ class EntityPosComp:
 
     def GetPos(self):
         """ 获取实体位置 """
-        return _clientGetEntityPos(self.entityId)
+        return _entityModule._clientGetEntityPos(self.entityId)
 
 class EntityRotComp:
     def __init__(self, entityId: str):
@@ -54,7 +49,7 @@ class EntityRotComp:
 
     def GetRot(self):
         """ 获取实体旋转欧拉角 """
-        return _clientGetEntityRot(self.entityId)
+        return _entityModule._clientGetEntityRot(self.entityId)
 
 class EngineCompFactory:
     def CreateItem(self, entityId: str):
