@@ -29,6 +29,13 @@ class BasicEvent(BaseEvent):
         _BASIC_EVENT_GROUPS[cls].add(EventHandler(func))
 
     @classmethod
+    def _unRegListen(cls, func):
+        if not cls in _BASIC_EVENT_GROUPS:
+            return False
+        group = _BASIC_EVENT_GROUPS[cls]
+        return group.remove(EventHandler(func))
+
+    @classmethod
     def _initEventListener(cls, group: EventGroup = None):
         """
         初始化事件监听器
