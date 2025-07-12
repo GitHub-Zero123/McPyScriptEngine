@@ -7,9 +7,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -20,6 +22,7 @@ import org.zero123.PyScriptEngine.Events.Item;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.PyMcBridge.ModLoader;
 import org.zero123.PyScriptEngine.Network.PacketHandler;
+import org.zero123.PyScriptEngine.Utils.WorldUtil;
 
 @Mod(PyScriptEngine.MODID)
 public class PyScriptEngine
@@ -43,7 +46,6 @@ public class PyScriptEngine
     {
         // 配置PyVM
         ModLoader.initializeVMConfigOnce(() -> {
-            // Native.initPythonEnvironment();
             ModLoader.setPyForceUseUTF8(1);
             ModLoader.setPyLineFlushMode(true);
             for (String path : PyInitConfig.initEnvPaths())
@@ -66,6 +68,12 @@ public class PyScriptEngine
             ModLoader.loadServerThread();
             EventManager.callServerEvent(-2);
         }
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event)
+    {
+        WorldUtil._serverInit(event);
     }
 
     @SubscribeEvent
