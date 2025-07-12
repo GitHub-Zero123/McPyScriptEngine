@@ -2,10 +2,31 @@ from .base import BaseServerEvent, BaseClientEvent, SERVER_EVENT, CLIENT_EVENT
 from ..entity import ServerEntity, ClientEntity
 lambda: "By Zero123"
 
+class BaseServerEntityEvent(BaseServerEvent):
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+        self._entityObj = None
+
+    def getEntity(self) -> ServerEntity:
+        """ 获取服务端实体对象 """
+        if self._entityObj is None:
+            self._entityObj = ServerEntity(self.entityId)
+        return self._entityObj
+
+class BaseClientEntityEvent(BaseClientEvent):
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+        self._entityObj = None
+
+    def getEntity(self) -> ClientEntity:
+        """ 获取客户端实体对象 """
+        if self._entityObj is None:
+            self._entityObj = ClientEntity(self.entityId)
+        return self._entityObj
+
 class _ENTITY_JOIN_LEVEL:
     def __init__(self, dic: dict):
         self.args = dic
-        self.entityId = dic.get("id", "")
         self.posX: float = dic.get("posX", 0.0)
         self.posY: float = dic.get("posY", 0.0)
         self.posZ: float = dic.get("posZ", 0.0)
@@ -45,84 +66,51 @@ class _ENTITY_JOIN_LEVEL:
         """
         return self.args.get("itemName", "")
 
-class AddEntityServerEvent(BaseServerEvent, _ENTITY_JOIN_LEVEL):
+class AddEntityServerEvent(BaseServerEntityEvent, _ENTITY_JOIN_LEVEL):
     """
     服务端实体加入世界事件
     """
     _NATIVE_ID = SERVER_EVENT.ENTITY_JOIN_LEVEL
 
-    def __init__(self, dic):
-        super().__init__(dic)
-        self._entityObj = None
+    def __init__(self, dic: dict):
+        BaseServerEntityEvent.__init__(self, dic.get("id", ""))
+        _ENTITY_JOIN_LEVEL.__init__(self, dic)
 
-    def getEntity(self) -> ServerEntity:
-        if self._entityObj is None:
-            self._entityObj = ServerEntity(self.entityId)
-        return self._entityObj
-
-class AddEntityClientEvent(BaseClientEvent, _ENTITY_JOIN_LEVEL):
+class AddEntityClientEvent(BaseClientEntityEvent, _ENTITY_JOIN_LEVEL):
     """
     客户端实体加入世界事件
     """
     _NATIVE_ID = CLIENT_EVENT.ENTITY_JOIN_LEVEL
 
-    def __init__(self, dic):
-        super().__init__(dic)
-        self._entityObj = None
-
-    def getEntity(self) -> ClientEntity:
-        if self._entityObj is None:
-            self._entityObj = ClientEntity(self.entityId)
-        return self._entityObj
-
-class _ENTITY_LEAVE_LEVEL:
     def __init__(self, dic: dict):
-        self.entityId = dic.get("id", "")
+        BaseClientEntityEvent.__init__(self, dic.get("id", ""))
+        _ENTITY_JOIN_LEVEL.__init__(self, dic)
 
-class EntityRemoveEvent(BaseServerEvent, _ENTITY_LEAVE_LEVEL):
+class EntityRemoveEvent(BaseServerEntityEvent):
     """
     服务端实体移除事件(析构)
     """
     _NATIVE_ID = SERVER_EVENT.ENTITY_LEAVE_LEVEL
 
-    def __init__(self, dic):
-        super().__init__(dic)
-        self._entityObj = None
-
-    def getEntity(self) -> ServerEntity:
-        if self._entityObj is None:
-            self._entityObj = ServerEntity(self.entityId)
-        return self._entityObj
-
-class RemoveEntityClientEvent(BaseClientEvent, _ENTITY_LEAVE_LEVEL):
+    def __init__(self, dic: dict):
+        super().__init__(dic.get("id", ""))
+ 
+class RemoveEntityClientEvent(BaseClientEntityEvent):
     """
     客户端实体移除事件(析构)
     """
     _NATIVE_ID = CLIENT_EVENT.ENTITY_LEAVE_LEVEL
 
-    def __init__(self, dic):
-        super().__init__(dic)
-        self._entityObj = None
-
-    def getEntity(self) -> ClientEntity:
-        if self._entityObj is None:
-            self._entityObj = ClientEntity(self.entityId)
-        return self._entityObj
-
-class _SERVER_DAMAGE_PRE(BaseServerEvent):
     def __init__(self, dic: dict):
-        super().__init__()
-        self.entityId = dic.get("entityId", "")
+        super().__init__(dic.get("id", ""))
+
+class _SERVER_DAMAGE_PRE(BaseServerEntityEvent):
+    def __init__(self, dic: dict):
+        super().__init__(dic.get("entityId", ""))
         self.srcId = dic.get("srcId", "")
         self._srcObj = None
         self._projectileObj = None
-        self._entityObj = None
         self.args = dic
-
-    def getEntity(self) -> ServerEntity:
-        if self._entityObj is None:
-            self._entityObj = ServerEntity(self.entityId)
-        return self._entityObj
 
     def getAttacker(self) -> ServerEntity | None:
         if not self.srcId:
@@ -183,22 +171,15 @@ class ActuallyHurtServerEvent(_SERVER_DAMAGE_PRE):
     """
     _NATIVE_ID = SERVER_EVENT.LIVING_DAMAGE_PRE
 
-class ActorHurtServerEvent(BaseServerEvent):
+class ActorHurtServerEvent(BaseServerEntityEvent):
     """
     服务端实体最终伤害事件，此时伤害已经产生，为只读数据
     """
     _NATIVE_ID = SERVER_EVENT.LIVING_DAMAGE_POST
 
     def __init__(self, dic: dict):
-        super().__init__()
-        self.entityId = dic.get("entityId", "")
-        self._entityObj = None
+        super().__init__(dic.get("entityId", ""))
         self.args = dic
-
-    def getEntity(self) -> ServerEntity:
-        if self._entityObj is None:
-            self._entityObj = ServerEntity(self.entityId)
-        return self._entityObj
 
     def getDamage(self) -> float:
         """

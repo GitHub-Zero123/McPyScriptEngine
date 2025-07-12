@@ -109,7 +109,6 @@ public class EntityEvent
         {
             if(!retJo.get("knock").getAsBoolean())
             {
-                System.out.println("取消");
                 event.setCanceled(true);
             }
         }
