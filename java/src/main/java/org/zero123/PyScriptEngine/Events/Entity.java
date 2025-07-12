@@ -25,7 +25,7 @@ public class Entity
         JsonObject args = new JsonObject();
         // 基础参数处理
         args.addProperty("id", entity.getUUID().toString());
-        args.addProperty("dimensionId", WorldUtil.getDimensionId(entity.level()));
+        args.addProperty("dimensionId", WorldUtil.serverGetDimensionId(entity.level()));
         args.addProperty("engineTypeStr", EntityType.getKey(entity.getType()).toString());
         // 位置信息处理
         final var pos = entity.position();

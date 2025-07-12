@@ -23,7 +23,7 @@ public class Block
         args.addProperty("z", blockPos.getZ());
         if (event.getLevel() instanceof Level level)
         {
-            args.addProperty("dimensionId", WorldUtil.getDimensionId(level));
+            args.addProperty("dimensionId", WorldUtil.serverGetDimensionId(level));
         } else
         {
             args.addProperty("dimensionId", -1);

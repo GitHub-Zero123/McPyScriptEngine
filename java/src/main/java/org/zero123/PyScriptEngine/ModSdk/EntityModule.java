@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.zero123.PyScriptEngine.Utils.EntityUtil;
+import org.zero123.PyScriptEngine.Utils.WorldUtil;
 
 import java.util.ArrayList;
 
@@ -349,5 +350,11 @@ public class EntityModule
         {
             player.displayClientMessage(Component.literal(msg), false);
         }
+    }
+
+    // 服务端获取实体所在维度
+    public static int _serverGetEntityDmId(String entityId)
+    {
+        return WorldUtil.serverGetEntityDimensionId(EntityUtil.serverGetEntityByUUID(entityId).orElse(null));
     }
 }

@@ -91,6 +91,14 @@ class MsgComp:
         """ 给指定玩家发送消息 """
         return _entityModule._serverSendMessage(playerId, color+msg)
 
+class DimensionComp:
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+
+    def GetEntityDimensionId(self) -> int:
+        """ 获取实体所在维度ID, 异常返回-1, 原版维度返回0-2, 三方JE自定义维度返回其他映射负数值(仅运行时临时分配) """
+        return _entityModule._serverGetEntityDmId(self.entityId)
+
 class EngineCompFactory:
     # 实现网易组件工厂
     @lru_cache(80)
@@ -128,3 +136,7 @@ class EngineCompFactory:
     @lru_cache(80)
     def CreateMsg(self, entityId: str):
         return MsgComp(entityId)
+    
+    @lru_cache(80)
+    def CreateDimension(self, entityId: str):
+        return DimensionComp(entityId)

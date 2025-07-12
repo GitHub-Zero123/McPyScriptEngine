@@ -5,10 +5,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -18,8 +20,18 @@ public class WorldUtil
     public static final HashMap<Integer, ResourceKey<Level>> DIMENSION_ID_MAP_R = new HashMap<>();
     public static final HashMap<Integer, String> DIMENSION_NAMED_MAP = new HashMap<>();
 
+    // 获取实体所在维度id
+    public static int serverGetEntityDimensionId(@Nullable Entity entity)
+    {
+        if(entity == null)
+        {
+            return -1;
+        }
+        return serverGetDimensionId(entity.level());
+    }
+
     // 根据维度获取ID
-    public static int getDimensionId(Level level)
+    public static int serverGetDimensionId(Level level)
     {
 /*        var dim = level.dimension();
         if (dim.equals(Level.OVERWORLD)) return 0;

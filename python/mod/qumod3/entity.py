@@ -236,6 +236,15 @@ class ServerEntity(Entity):
             return None
         return ServerEntity(targetId)
 
+    def getDimensionId(self) -> int:
+        """
+        获取实体所在维度ID, 异常返回-1, 原版维度返回0-2, 三方JE自定义维度返回其他映射负数值(仅运行时临时分配)
+        :return: 维度ID
+        """
+        if not self.entityId:
+            return -1
+        return _entityModule._serverGetEntityDmId(self.entityId)
+
     @staticmethod
     def getWorldEntities() -> list['ServerEntity']:
         """ 获取服务端世界中的所有实体 """

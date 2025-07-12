@@ -144,3 +144,9 @@ def _setCommand(cmdStr: str, entityId: str="", showOutput: bool=False) -> bool:
     return bool(findJavaCls(_CMD_MODULE, "_setCommand", [CAST_TYPE.STRING, CAST_TYPE.STRING, CAST_TYPE.INT], CAST_TYPE.INT).call(
         cmdStr, entityId, int(showOutput)
     ))
+
+def _serverGetEntityDmId(entityId: str) -> int:
+    """ 获取实体所在维度ID, 异常返回-1, 原版维度返回0-2, 三方JE自定义维度返回其他映射负数值(仅运行时临时分配) """
+    return int(findJavaCls(_ENTITY_MODULE, "_serverGetEntityDmId", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
+        entityId
+    ))
