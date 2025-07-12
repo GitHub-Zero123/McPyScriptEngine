@@ -2,7 +2,8 @@ package org.zero123.PyScriptEngine.Utils;
 
 import net.minecraft.world.level.Level;
 
-public class WorldUtil {
+public class WorldUtil
+{
     public static int getDimensionId(Level level)
     {
         var dim = level.dimension();

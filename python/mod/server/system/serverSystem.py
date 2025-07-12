@@ -86,7 +86,7 @@ class ServerSystemManager(SystemManager):
         """
         发送事件到特定客户端
         :param playerId: 玩家ID
-        :param eventName: 事件名称
+        :param eventData: 事件名称
         :param sendData: 数据参数
         """
         return network._serverSendMsgToClient(playerId, packSystemPacket(eventData, sendData))
@@ -95,7 +95,7 @@ class ServerSystemManager(SystemManager):
         """
         发送事件到多个客户端
         :param playerListId: 玩家ID列表
-        :param eventName: 事件名称
+        :param eventData: 事件名称
         :param sendData: 数据参数
         """
         return network._serverSendMsgToMutClients(playerListId, packSystemPacket(eventData, sendData))
@@ -103,7 +103,7 @@ class ServerSystemManager(SystemManager):
     def sendEventToAllClient(self, eventData: tuple, sendData: dict):
         """
         发送事件到所有客户端
-        :param eventName: 事件名称
+        :param eventData: 事件名称
         :param sendData: 数据参数
         """
         return network._serverSendMsgToAllClients(packSystemPacket(eventData, sendData))

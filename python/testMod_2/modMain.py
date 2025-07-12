@@ -69,6 +69,7 @@ def onAddEntityServer(event: AddEntityServerEvent):
     player.sendMessage("§b2.§f 右键使用 §a钻石 §f→ §d发射一只苦力怕")
     player.sendMessage("§b3.§f 右键使用 §c钻石斧 §f→ §aRPC调用客户端函数")
     player.sendMessage("§b4.§f 右键使用 §a苹果 §f→ §c禁止使用苹果")
+    player.sendMessage("§b5.§f 破坏 §c钻石块 §f→ §c禁止破坏钻石块")
 
 @SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):

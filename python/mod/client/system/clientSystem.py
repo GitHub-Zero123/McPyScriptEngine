@@ -63,7 +63,7 @@ class ClientSystemManager(SystemManager):
     def sendToServer(self, eventData: object, sendData: dict):
         """
         发送事件到服务器
-        :param eventName: 事件名称
+        :param eventData: 事件名称
         :param sendData: 数据参数
         """
         return network._clientSendMsgToServer(packSystemPacket(eventData, sendData))

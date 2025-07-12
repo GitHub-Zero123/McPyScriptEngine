@@ -6,4 +6,5 @@ def onServerPlayerTryDestroyBlock(event: ServerPlayerTryDestroyBlockEvent):
     if event.getBlockName() == "minecraft:diamond_block":
         player = event.getEntity()
         player.sendMessage("You cannot destroy diamond blocks!")
+        player.setCommand("/summon lightning_bolt")
         event.setCanceled()
