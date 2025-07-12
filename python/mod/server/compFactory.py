@@ -106,6 +106,20 @@ class BlockStateComp:
     def __init__(self, levelId: str):
         self.levelId = levelId
 
+class BlockInfoComp:
+    def __init__(self, levelId: str):
+        self.levelId = levelId
+
+    def GetBlockNew(self, pos: tuple[int, int, int], dimensionId: int=0):
+        """
+        获取某一位置的方块信息
+        :param pos: 方块位置坐标
+        :param dimensionId: 维度ID
+        :return: 方块信息字典, 例如 {"name": "minecraft:stone", "aux": 0}
+        注意：若方块所在区域未加载将返回空气
+        """
+        return _worldModule._serverGetBlock(pos, dimensionId)
+
     def SetBlockNew(self,
             pos: tuple[int, int, int],
             blockDict: dict,
@@ -124,20 +138,6 @@ class BlockStateComp:
         :param updateNeighbors: 是否更新邻近方块
         """
         return _worldModule._serverSetBlock(pos, blockDict, oldBlockHandling, dimensionId, updateNeighbors)
-
-class BlockInfoComp:
-    def __init__(self, levelId: str):
-        self.levelId = levelId
-
-    def GetBlockNew(self, pos: tuple[int, int, int], dimensionId: int=0):
-        """
-        获取某一位置的方块信息
-        :param pos: 方块位置坐标
-        :param dimensionId: 维度ID
-        :return: 方块信息字典, 例如 {"name": "minecraft:stone", "aux": 0}
-        注意：若方块所在区域未加载将返回空气
-        """
-        return _worldModule._serverGetBlock(pos, dimensionId)
 
 class EngineCompFactory:
     # 实现网易组件工厂
