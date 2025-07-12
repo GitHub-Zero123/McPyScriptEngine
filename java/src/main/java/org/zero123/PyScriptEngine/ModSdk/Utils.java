@@ -22,6 +22,21 @@ public class Utils
         return sb.toString();
     }
 
+    public static int[] parseIntArray(String input)
+    {
+        if (input == null || input.isBlank()) {
+            return new int[0];
+        }
+
+        String[] parts = input.trim().split("\\s+"); // 按空格分隔
+        int[] result = new int[parts.length];
+        for (int i = 0; i < parts.length; i++)
+        {
+            result[i] = Integer.parseInt(parts[i]);
+        }
+        return result;
+    }
+
     public static double[] parseDoubleArray(String input)
     {
         if (input == null || input.isBlank()) {

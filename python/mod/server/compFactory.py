@@ -1,4 +1,7 @@
-from ..api import entityModule as _entityModule
+from ..api import (
+    entityModule as _entityModule,
+    world as _worldModule
+)
 from ..common.timer import ServerTimerManager, TimerTask
 from functools import lru_cache
 lambda: "By Zero123"
@@ -95,9 +98,46 @@ class DimensionComp:
     def __init__(self, entityId: str):
         self.entityId = entityId
 
-    def GetEntityDimensionId(self) -> int:
+    def GetEntityDimensionId(self):
         """ 获取实体所在维度ID, 异常返回-1, 原版维度返回0-2, 三方JE自定义维度返回其他映射负数值(仅运行时临时分配) """
         return _entityModule._serverGetEntityDmId(self.entityId)
+
+class BlockStateComp:
+    def __init__(self, levelId: str):
+        self.levelId = levelId
+
+    def SetBlockNew(self,
+            pos: tuple[int, int, int],
+            blockDict: dict,
+            oldBlockHandling: int=0,
+            dimensionId: int=0,
+            isLegacy: bool=False,   # 在JE废弃该参数
+            updateNeighbors: bool=False
+        ):
+        """
+        设置某一位置方块
+        :param pos: 方块位置坐标
+        :param blockDict: 方块数据字典, 例如 {"name": "minecraft:stone"}}
+        :param oldBlockHandling: 旧方块处理方式, 0-替换, 1-破坏, 2-保留
+        :param dimensionId: 维度ID
+        :param isLegacy: 该参数在JE中不存在
+        :param updateNeighbors: 是否更新邻近方块
+        """
+        return _worldModule._serverSetBlock(pos, blockDict, oldBlockHandling, dimensionId, updateNeighbors)
+
+class BlockInfoComp:
+    def __init__(self, levelId: str):
+        self.levelId = levelId
+
+    def GetBlockNew(self, pos: tuple[int, int, int], dimensionId: int=0):
+        """
+        获取某一位置的方块信息
+        :param pos: 方块位置坐标
+        :param dimensionId: 维度ID
+        :return: 方块信息字典, 例如 {"name": "minecraft:stone", "aux": 0}
+        注意：若方块所在区域未加载将返回空气
+        """
+        return _worldModule._serverGetBlock(pos, dimensionId)
 
 class EngineCompFactory:
     # 实现网易组件工厂
@@ -140,3 +180,11 @@ class EngineCompFactory:
     @lru_cache(80)
     def CreateDimension(self, entityId: str):
         return DimensionComp(entityId)
+    
+    @lru_cache(80)
+    def CreateBlockState(self, levelId: str):
+        return BlockStateComp(levelId)
+
+    @lru_cache(80)
+    def CreateBlockInfo(self, levelId: str):
+        return BlockInfoComp(levelId)
