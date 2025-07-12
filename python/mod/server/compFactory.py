@@ -112,7 +112,7 @@ class BlockStateComp:
             oldBlockHandling: int=0,
             dimensionId: int=0,
             isLegacy: bool=False,   # 在JE废弃该参数
-            updateNeighbors: bool=False
+            updateNeighbors: bool=True
         ):
         """
         设置某一位置方块
