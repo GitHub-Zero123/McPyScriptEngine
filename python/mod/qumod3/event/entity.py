@@ -24,6 +24,8 @@ class BaseClientEntityEvent(BaseClientEvent):
             self._entityObj = ClientEntity(self.entityId)
         return self._entityObj
 
+# ======================== 实体构造与析构 ========================
+
 class _ENTITY_JOIN_LEVEL:
     def __init__(self, dic: dict):
         self.args = dic
@@ -104,6 +106,8 @@ class RemoveEntityClientEvent(BaseClientEntityEvent):
     def __init__(self, dic: dict):
         super().__init__(dic.get("id", ""))
 
+# ======================== 实体受伤事件 ========================
+
 class _SERVER_DAMAGE_PRE(BaseServerEntityEvent):
     def __init__(self, dic: dict):
         super().__init__(dic.get("entityId", ""))
@@ -160,7 +164,7 @@ class DamageEvent(_SERVER_DAMAGE_PRE):
 
     def setCanceled(self):
         """
-        设置事件为取消状态
+        设置取消本次伤害, 不再继续执行伤害管线
         """
         self.args["knock"] = False
         self.args["damage"] = 0.0
@@ -187,3 +191,4 @@ class ActorHurtServerEvent(BaseServerEntityEvent):
         :return: 最终伤害值
         """
         return self.args.get("damage", 0.0)
+

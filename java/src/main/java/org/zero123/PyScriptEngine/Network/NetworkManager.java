@@ -6,14 +6,14 @@ import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.zero123.PyScriptEngine.ModSdk.EntityManager;
+import org.zero123.PyScriptEngine.Utils.EntityUtil;
 
 public class NetworkManager
 {
     // 服务端发包给指定客户端
     public static void _serverSendMsgToClient(String playerId, String msg)
     {
-        final var entityOpt = EntityManager.serverGetEntityByUUID(playerId);
+        final var entityOpt = EntityUtil.serverGetEntityByUUID(playerId);
         if(entityOpt.isEmpty())
         {
             return;
@@ -37,7 +37,7 @@ public class NetworkManager
         var clientPacket = packet.toVanillaClientbound();
         for(var playerId : playerIds.trim().split("\\s+"))
         {
-            final var entityOpt = EntityManager.serverGetEntityByUUID(playerId);
+            final var entityOpt = EntityUtil.serverGetEntityByUUID(playerId);
             if(entityOpt.isEmpty())
             {
                 continue;

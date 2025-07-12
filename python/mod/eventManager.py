@@ -113,6 +113,7 @@ class SERVER_EVENT:
     LIVING_INCOMING_DAMAGE = 100     # 生物受到伤害前(未计算护甲值)
     LIVING_DAMAGE_PRE = 101          # 生物受到伤害前(已计算护甲值)
     LIVING_DAMAGE_POST = 102         # 生物受到伤害后(已计算护甲值)
+    PLAYER_BLOCK_BREAK = 110         # 玩家尝试破坏方块
 
 class CLIENT_EVENT:
     MOD_LOAD_FINISH = -2
@@ -125,6 +126,12 @@ class CLIENT_EVENT:
     ENTITY_LEAVE_LEVEL = 4  # 实体离开世界
 
 _MC_EVENT_MAPPING_TABLE = {
+    # MOD加载完成事件
+    "LoadServerAddonScriptsAfter": SERVER_EVENT.MOD_LOAD_FINISH,
+    "LoadClientAddonScriptsAfter": CLIENT_EVENT.MOD_LOAD_FINISH,
+    # 网络包接收事件
+    "ServerboundPacketReceivedEvent": SERVER_EVENT.NETWORK_PACKET_RECEIVED,
+    "ClientboundPacketReceivedEvent": CLIENT_EVENT.NETWORK_PACKET_RECEIVED,
     # 游戏Tick事件(20tick/s)
     "OnScriptTickServer": SERVER_EVENT.SERVER_TICK_POST,
     "OnScriptTickClient": CLIENT_EVENT.CLIENT_TICK_POST,
@@ -140,12 +147,8 @@ _MC_EVENT_MAPPING_TABLE = {
     "DamageEvent": SERVER_EVENT.LIVING_INCOMING_DAMAGE,
     "ActuallyHurtServerEvent": SERVER_EVENT.LIVING_DAMAGE_PRE,
     "ActorHurtServerEvent": SERVER_EVENT.LIVING_DAMAGE_POST,
-    # 网络包接收事件
-    "ServerboundPacketReceivedEvent": SERVER_EVENT.NETWORK_PACKET_RECEIVED,
-    "ClientboundPacketReceivedEvent": CLIENT_EVENT.NETWORK_PACKET_RECEIVED,
-    # MOD加载完成事件
-    "LoadServerAddonScriptsAfter": SERVER_EVENT.MOD_LOAD_FINISH,
-    "LoadClientAddonScriptsAfter": CLIENT_EVENT.MOD_LOAD_FINISH,
+    # 玩家尝试破坏方块事件
+    "ServerPlayerTryDestroyBlockEvent": SERVER_EVENT.PLAYER_BLOCK_BREAK,
 }
 
 class EngineEventManager(EventManager):

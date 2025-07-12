@@ -3,6 +3,7 @@ package org.zero123.PyScriptEngine.ModSdk;
 import com.google.gson.Gson;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
+import org.zero123.PyScriptEngine.Utils.EntityUtil;
 
 public class ProjectileModule
 {
@@ -18,7 +19,7 @@ public class ProjectileModule
     // 创建并发射抛射物
     public static String _serverShootProjectile(String entityId, String entityIdentifier, String json)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return "";
@@ -40,7 +41,7 @@ public class ProjectileModule
         {
             direction = new Vec3(params.direction[0], params.direction[1], params.direction[2]);
         }
-        var shooterObj = EntityManager.createEntityByResource(shooterId.level(), entityIdentifier, pos, direction, params.power != 0 ? params.power : 1.0f);
+        var shooterObj = EntityUtil.createEntityByResource(shooterId.level(), entityIdentifier, pos, direction, params.power != 0 ? params.power : 1.0f);
         if(shooterObj == null)
         {
             return "";

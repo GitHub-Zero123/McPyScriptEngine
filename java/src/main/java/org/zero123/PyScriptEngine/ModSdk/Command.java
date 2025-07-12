@@ -7,6 +7,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.minecraft.server.level.ServerPlayer;
+import org.zero123.PyScriptEngine.Utils.EntityUtil;
+
 import java.util.Objects;
 
 public class Command
@@ -32,7 +34,7 @@ public class Command
             return 1;
         }
         // 实体执行(不一定是玩家)
-        final var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        final var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return 0;

@@ -81,6 +81,7 @@ def onScriptTickClient(event: OnScriptTickClient):
 @ServerInit
 def onServerInit():
     from . import hurtEventTest    # 加载 hurtEventTest 模块
+    from . import blockEventTest    # 加载 blockEventTest 模块
 
 @ClientInit
 def onClientInit():

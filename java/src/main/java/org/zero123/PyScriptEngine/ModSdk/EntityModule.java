@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.checkerframework.checker.units.qual.A;
+import org.zero123.PyScriptEngine.Utils.EntityUtil;
 
 import java.util.ArrayList;
 
@@ -57,7 +57,7 @@ public class EntityModule
     // 获取实体坐标
     public static String _serverGetEntityPos(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return "";
@@ -72,7 +72,7 @@ public class EntityModule
     // 客户端获取实体坐标
     public static String _clientGetEntityPos(String entityId)
     {
-        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.clientGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return "";
@@ -87,7 +87,7 @@ public class EntityModule
     // 设置实体坐标
     public static void _serverSetEntityPos(String entityId, String posBytes)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             var posArray = Utils.parseDoubleArray(posBytes);
@@ -105,7 +105,7 @@ public class EntityModule
     // 获取实体旋转角
     public static String _serverGetEntityRot(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             final var entity = entityOpt.get();
@@ -117,7 +117,7 @@ public class EntityModule
     // 客户端获取实体旋转角
     public static String _clientGetEntityRot(String entityId)
     {
-        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.clientGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             final var entity = entityOpt.get();
@@ -129,7 +129,7 @@ public class EntityModule
     // 获取实体的标识符
     public static String _serverGetEntityTypeName(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             return EntityType.getKey(entityOpt.get().getType()).toString();
@@ -140,7 +140,7 @@ public class EntityModule
     // 客户端获取实体标识符
     public static String _clientGetEntityTypeName(String entityId)
     {
-        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.clientGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             return EntityType.getKey(entityOpt.get().getType()).toString();
@@ -151,7 +151,7 @@ public class EntityModule
     // 判断实体类型是不是玩家
     public static int _serverCheckIsPlayer(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             if(entityOpt.get() instanceof Player)
@@ -165,7 +165,7 @@ public class EntityModule
     // 客户端判断实体是不是玩家
     public static int _clientCheckIsPlayer(String entityId)
     {
-        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.clientGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             if(entityOpt.get() instanceof Player)
@@ -179,14 +179,14 @@ public class EntityModule
     // 判断实体是否存在
     public static int _serverCheckEntityAlive(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         return entityOpt.isPresent() ? 1 : 0;
     }
 
     // 客户端判断实体是否存在
     public static int _clientCheckEntityAlive(String entityId)
     {
-        var entityOpt = EntityManager.clientGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.clientGetEntityByUUID(entityId);
         return entityOpt.isPresent() ? 1 : 0;
     }
 
@@ -239,7 +239,7 @@ public class EntityModule
     // 杀死特定实体
     public static int _serverKillEntity(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             final var entity = entityOpt.get();
@@ -256,7 +256,7 @@ public class EntityModule
     // 销毁特定实体
     public static int _serverDestroyEntity(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isPresent())
         {
             final var entity = entityOpt.get();
@@ -294,7 +294,7 @@ public class EntityModule
     // 获取指定实体的目标id 如果不存在返回空字符串
     public static String _serverGetEntityTargetId(String entityId)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return "";
@@ -314,7 +314,7 @@ public class EntityModule
     /** 向指定玩家发送一条服务端消息（系统消息） **/
     public static void _serverSendMessage(String entityId, String message)
     {
-        var entityOpt = EntityManager.serverGetEntityByUUID(entityId);
+        var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
         if(entityOpt.isEmpty())
         {
             return;

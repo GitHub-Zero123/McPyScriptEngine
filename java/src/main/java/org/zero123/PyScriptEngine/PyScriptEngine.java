@@ -14,8 +14,9 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.slf4j.Logger;
-import org.zero123.PyScriptEngine.Events.EntityEvent;
-import org.zero123.PyScriptEngine.Events.ItemEvent;
+import org.zero123.PyScriptEngine.Events.Block;
+import org.zero123.PyScriptEngine.Events.Entity;
+import org.zero123.PyScriptEngine.Events.Item;
 import org.zero123.PyMcBridge.EventManager;
 import org.zero123.PyMcBridge.ModLoader;
 import org.zero123.PyScriptEngine.Network.PacketHandler;
@@ -32,8 +33,9 @@ public class PyScriptEngine
     {
         modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.register(this);
-        NeoForge.EVENT_BUS.register(new ItemEvent());
-        NeoForge.EVENT_BUS.register(new EntityEvent());
+        NeoForge.EVENT_BUS.register(new Item());
+        NeoForge.EVENT_BUS.register(new Entity());
+        NeoForge.EVENT_BUS.register(new Block());
     }
 
     // 公用初始化方法，会在游戏加载时被调用
