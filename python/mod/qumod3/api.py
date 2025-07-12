@@ -3,14 +3,17 @@ from ..common.timer import TimerManager
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 lambda: "By Zero123"
 
+def getFuncBindEvent(func: 'function') -> type[BaseEvent]:
+    EventTypeCls = next(iter(func.__annotations__.values()))
+    if not issubclass(EventTypeCls, BaseEvent):
+        raise TypeError(f"EventBus only accepts subclasses of BaseEvent, got {EventTypeCls.__name__}")
+    return EventTypeCls
+
 def SubscribeEvent(func: 'function'):
     """
         装饰器 注册事件总线事件
     """
-    eventTypeCls = next(iter(func.__annotations__.values()))
-    if not issubclass(eventTypeCls, BaseEvent):
-        raise TypeError(f"EventBus only accepts subclasses of BaseEvent, got {eventTypeCls.__name__}")
-    eventTypeCls._regListen(func)
+    getFuncBindEvent(func)._regListen(func)
     return func
 
 def ServerInit(func):
@@ -41,3 +44,11 @@ def getThreadLocalTimer() -> TimerManager:
     else:
         from ..common.timer import ClientTimerManager
         return ClientTimerManager.getInstance()
+
+def regFuncListener(func: 'function'):
+    """ 动态注册事件监听函数 """
+    getFuncBindEvent(func)._regListen(func)
+
+def unRegFuncListener(func: 'function'):
+    """ 动态取消注册事件监听函数 """
+    getFuncBindEvent(func)._unRegListen(func)
