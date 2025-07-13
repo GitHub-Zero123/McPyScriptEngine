@@ -1,4 +1,7 @@
-from ..api import entityModule as _entityModule
+from ..api import (
+    entityModule as _entityModule,
+    world as _worldModule
+)
 from ..common.timer import ClientTimerManager, TimerTask
 from functools import lru_cache
 lambda: "By Zero123"
@@ -51,6 +54,20 @@ class EntityRotComp:
         """ 获取实体旋转欧拉角 """
         return _entityModule._clientGetEntityRot(self.entityId)
 
+class BlockInfoComp:
+    def __init__(self, levelId: str):
+        self.levelId = levelId
+
+    def GetBlock(self, pos: tuple[int, int, int]) -> tuple[str, int]:
+        """
+        获取某一位置的方块信息
+        :param pos: 方块位置坐标
+        :return: 方块信息tuple, 例如 ("minecraft:stone", 0)
+        注意：若方块所在区域未加载将返回空气
+        """
+        blockDict = _worldModule._clientGetBlock(pos)
+        return (blockDict.get("name", "minecraft:air"), blockDict.get("aux", 0))
+
 class EngineCompFactory:
     def CreateItem(self, entityId: str):
         pass
@@ -70,3 +87,7 @@ class EngineCompFactory:
     @lru_cache(80)
     def CreateEngineType(self, entityId: str):
         return EngineTypeComp(entityId)
+
+    @lru_cache(80)
+    def CreateBlockInfo(self, levelId: str):
+        return BlockInfoComp(levelId)

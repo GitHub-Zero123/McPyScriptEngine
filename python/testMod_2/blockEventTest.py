@@ -1,7 +1,8 @@
 from mod.qumod3.event.block import ServerPlayerTryDestroyBlockEvent
 # from mod.qumod3.event.item import ServerItemTryUseEvent
 from mod.qumod3.api import SubscribeEvent
-import mod.server.extraServerApi as serverApi
+# import mod.server.extraServerApi as serverApi
+from mod.qumod3.block import BlockState
 
 @SubscribeEvent
 def onServerPlayerTryDestroyBlock(event: ServerPlayerTryDestroyBlockEvent):
@@ -10,13 +11,12 @@ def onServerPlayerTryDestroyBlock(event: ServerPlayerTryDestroyBlockEvent):
         player.sendMessage("You cannot destroy diamond blocks!")
         player.setCommand("/summon lightning_bolt {} {} {}".format(*event.getPos()))
         event.setCanceled()
-        serverApi.GetEngineCompFactory().CreateBlockInfo(None).SetBlockNew(
-            event.getPos(), {"name": "minecraft:iron_block"}, 0, event.getDimensionId()
+        # serverApi.GetEngineCompFactory().CreateBlockInfo(None).SetBlockNew(
+        #     event.getPos(), {"name": "minecraft:iron_block"}, 0, event.getDimensionId()
+        # )
+        BlockState("minecraft:iron_block").placeServer(
+            event.getPos(), event.getDimensionId()
         )
-        # x, y, z = event.getPos()
-        # print(serverApi.GetEngineCompFactory().CreateBlockInfo(None).GetBlockNew(
-        #     (x, y+1, z), event.getDimensionId()
-        # ))
 
 # @SubscribeEvent
 # def onItemTryUseServer(event: ServerItemTryUseEvent):

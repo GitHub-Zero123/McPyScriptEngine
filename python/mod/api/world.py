@@ -25,3 +25,13 @@ def _serverGetBlock(pos: tuple[int, int, int], dimensionId: int = 0) -> dict:
     return loads(findJavaCls(_WORLD_MODULE, "_serverGetBlock", [CAST_TYPE.STRING, CAST_TYPE.INT], CAST_TYPE.STRING).call(
         numberTupleJoin(int(v) for v in pos), int(dimensionId)
     ))
+
+def _clientGetBlock(pos: tuple[int, int, int]) -> dict:
+    """ 客户端获取方块数据
+    :param pos: 方块位置
+    :param dimensionId: 维度ID
+    :return: 方块数据字典 {"name": "minecraft:stone", "aux": 0}
+    """
+    return loads(findJavaCls(_WORLD_MODULE, "_clientGetBlock", [CAST_TYPE.STRING, CAST_TYPE.INT], CAST_TYPE.STRING).call(
+        numberTupleJoin(int(v) for v in pos)
+    ))

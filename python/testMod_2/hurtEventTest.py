@@ -3,7 +3,7 @@ from mod.qumod3.api import SubscribeEvent
 
 @SubscribeEvent
 def onDamageEvent(event: DamageEvent):
-    if event.getDamage() < 5:
+    if event.getDamage() < 4:
         event.setCanceled()
 
 @SubscribeEvent

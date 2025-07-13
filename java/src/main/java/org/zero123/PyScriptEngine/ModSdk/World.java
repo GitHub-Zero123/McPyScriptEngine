@@ -1,5 +1,6 @@
 package org.zero123.PyScriptEngine.ModSdk;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import org.zero123.PyScriptEngine.Utils.BlockUtil;
 import org.zero123.PyScriptEngine.Utils.WorldUtil;
@@ -18,22 +19,19 @@ public class World
         final var level = levelOpt.get();   // Level对象
         final var blockState = BlockUtil.jsonToBlockState(blockJo);
         final var blockPos = new BlockPos(posArray[0], posArray[1], posArray[2]);
-        final var current = level.getBlockState(blockPos);  // 获取已有方块对象
         switch (oldHandling)
         {
             case 2:
-                if (!current.isAir())
+                if (!level.getBlockState(blockPos).isAir())
                 {
                     return 0; // 保留旧方块
                 }
                 break;
             case 1:
-                if (!current.isAir())
+                if (!level.getBlockState(blockPos).isAir())
                 {
-                    if (!level.isClientSide())
-                    {
-                        level.destroyBlock(blockPos, true); // 掉落
-                    }
+                    // 破坏方块并掉落物品
+                    level.destroyBlock(blockPos, true);
                 }
                 break;
             case 0:
@@ -58,6 +56,22 @@ public class World
         final var level = levelOpt.get();   // Level对象
         final var blockPos = new BlockPos(posArray[0], posArray[1], posArray[2]);
         final var current = level.getBlockState(blockPos);  // 获取已有方块对象
+        return BlockUtil.blockStateToJson(current).toString();
+    }
+
+    // 客户端获取方块信息
+    public static String _clientGetBlock(String pos)
+    {
+        var posArray = Utils.parseIntArray(pos);
+        var level = Minecraft.getInstance().level; // 当前客户端世界
+
+        if (level == null)
+        {
+            return "{\"name\":\"minecraft:air\", \"aux\": 0}";
+        }
+
+        var blockPos = new BlockPos(posArray[0], posArray[1], posArray[2]);
+        var current = level.getBlockState(blockPos);
         return BlockUtil.blockStateToJson(current).toString();
     }
 }

@@ -2,9 +2,9 @@ from mod.qumod3.api import SubscribeEvent, ServerInit, ClientInit
 from mod.qumod3.event.world import OnScriptTickServer, OnScriptTickClient
 from mod.qumod3.event.item import ServerItemTryUseEvent, ClientItemTryUseEvent
 from mod.qumod3.event.entity import AddEntityServerEvent
-from mod.qumod3.entity import ServerEntity, ClientEntity
+from mod.qumod3.entity import ServerEntity, ClientEntity, ProjectileOptions
 from mod.qumod3.rpc import RpcBridge
-import mod.server.extraServerApi as serverApi
+# import mod.server.extraServerApi as serverApi
 
 rpc = RpcBridge("testMod_2")    # 命名空间为 testMod_2
 
@@ -32,16 +32,22 @@ def onItemTryUseServer(event: ServerItemTryUseEvent):
         player = event.getEntity()
         x, y, z = player.position.getPos()
         # 混合使用modsdk兼容层API
-        serverApi.GetEngineCompFactory().CreateProjectile(serverApi.GetLevelId()).CreateProjectileEntity(
-            player.entityId,
-            "minecraft:creeper",
-            {
-                "position": (x, y+1.5, z),
-                "direction": player.rotation.getRotDir(),
-                "isDamageOwner": False,
-                "power": 2.0,
-            }
-        )
+        # serverApi.GetEngineCompFactory().CreateProjectile(serverApi.GetLevelId()).CreateProjectileEntity(
+        #     player.entityId,
+        #     "minecraft:creeper",
+        #     {
+        #         "position": (x, y+1.5, z),
+        #         "direction": player.rotation.getRotDir(),
+        #         "isDamageOwner": False,
+        #         "power": 2.0,
+        #     }
+        # )
+        player.projectile.create(ProjectileOptions("minecraft:creeper",
+            position=(x, y + 1.5, z),
+            direction=player.rotation.getRotDir(),
+            isDamageOwner=False,
+            power=2.0
+        ))
         player.sendMessage("Creeper projectile created!")
     elif itemName == "minecraft:diamond_axe":
         player = event.getEntity()
@@ -69,7 +75,8 @@ def onAddEntityServer(event: AddEntityServerEvent):
     player.sendMessage("§b2.§f 右键使用 §a钻石 §f→ §d发射一只苦力怕")
     player.sendMessage("§b3.§f 右键使用 §c钻石斧 §f→ §aRPC调用客户端函数")
     player.sendMessage("§b4.§f 右键使用 §a苹果 §f→ §c禁止使用苹果")
-    player.sendMessage("§b5.§f 破坏 §c钻石块 §f→ §c禁止破坏钻石块")
+    player.sendMessage("§b5.§f 破坏 §c钻石块 §f→ §c变成铁块并产生落雷")
+    player.sendMessage("§b6.§f 游戏内伤害一定数值不再产生伤害")
 
 @SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):

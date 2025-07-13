@@ -3,7 +3,7 @@ import PyMCBridge.ModLoader as _ModLoader # type: ignore
 import PyMCBridge.Math as _Math # type: ignore
 lambda: "By Zero123"
 
-class Position:
+class _PositionComp:
     def __init__(self, entityId):
         self._entityId = entityId
 
@@ -24,7 +24,7 @@ class Position:
             return None
         return _entityModule._serverSetEntityPos(self._entityId, value)
 
-class Rotation:
+class _RotationComp:
     def __init__(self, entityId):
         self._entityId = entityId
 
@@ -82,14 +82,14 @@ class Entity:
     def position(self):
         """ 实体位置管理 """
         if self._position is None:
-            self._position = Position(self.entityId)
+            self._position = _PositionComp(self.entityId)
         return self._position
 
     @property
     def rotation(self):
         """ 实体旋转管理 """
         if self._rotation is None:
-            self._rotation = Rotation(self.entityId)
+            self._rotation = _RotationComp(self.entityId)
         return self._rotation
 
     def getIsClientSide(self):
@@ -103,6 +103,13 @@ class Entity:
         返回当前实体对象是否来自服务端
         """
         return not self._isClientSide
+
+    @property
+    def identifier(self):
+        """
+        实体命名标识符
+        """
+        return self.getTypeName()
 
     def getTypeName(self):
         """
@@ -183,9 +190,108 @@ class ClientEntity(Entity):
         """ 获取本地玩家实体对象"""
         return ClientEntity(_entityModule._clientGetLocalPlayerId())
 
+class ProjectileOptions:
+    """
+    抛射物配置类
+    :param position: 抛射物初始位置 (x, y, z)
+    :param direction: 抛射物初始方向 (x, y, z)
+    :param power: 抛射物的初始力量
+    :param isDamageOwner: 是否伤害创建者(默认False)
+    """
+    def __init__(
+        self,
+        identifier: str,
+        position: tuple[float, float, float],
+        direction: tuple[float, float, float],
+        power: float = 1.0,
+        isDamageOwner: bool = False
+    ):
+        self.identifier = identifier
+        self.position = position
+        self.direction = direction
+        self.power = power
+        self.isDamageOwner = isDamageOwner
+
+    def packData(self) -> dict:
+        """
+        将配置打包成字典
+        :return: 配置字典
+        """
+        return {
+            "position": self.position,
+            "direction": self.direction,
+            "power": self.power,
+            "isDamageOwner": self.isDamageOwner
+        }
+    
+    def setIdentifier(self, identifier: str):
+        """
+        设置抛射物标识符
+        :param identifier: 抛射物标识符字符串
+        """
+        self.identifier = identifier
+        return self
+
+    def setPosition(self, position: tuple[float, float, float]):
+        """
+        设置抛射物初始位置
+        :param position: (x, y, z) 坐标元组
+        """
+        self.position = position
+        return self
+    
+    def setDirection(self, direction: tuple[float, float, float]):
+        """
+        设置抛射物初始方向
+        :param direction: (x, y, z) 方向元组
+        """
+        self.direction = direction
+        return self
+    
+    def setPower(self, power: float):
+        """
+        设置抛射物的初始力量
+        :param power: 力量值
+        """
+        self.power = power
+        return self
+    
+    def setDamageOwner(self, isDamageOwner: bool):
+        """
+        设置是否伤害创建者
+        :param isDamageOwner: 是否伤害创建者
+        """
+        self.isDamageOwner = isDamageOwner
+        return self
+
+class _ProjectileComp:
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+
+    def create(self, options: ProjectileOptions) -> bool:
+        """
+        创建抛射物
+        :param options: ProjectileOptions对象
+        :return: 是否创建成功
+        """
+        if not self.entityId:
+            return False
+        return _entityModule._serverShootProjectile(self.entityId, options.identifier, options.packData())
+
 class ServerEntity(Entity):
     def __init__(self, entityId):
         super().__init__(entityId, False)
+        self._projectileComp = None
+
+    @property
+    def projectile(self) -> _ProjectileComp:
+        """
+        获取抛射物组件
+        :return: ProjectileComp对象
+        """
+        if self._projectileComp is None:
+            self._projectileComp = _ProjectileComp(self.entityId)
+        return self._projectileComp
 
     def getTypeName(self):
         if not self.entityId:
