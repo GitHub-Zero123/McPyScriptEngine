@@ -1,9 +1,10 @@
+from collections import OrderedDict
 lambda: "通用事件管理器"
 
 class EventHandler:
     def __init__(self, handler: 'function', priority=0):
         self.handler = handler
-        self._priority = priority
+        self._priority = max(priority, 0)
 
     def __call__(self, *args, **kwargs):
         return self.handler(*args, **kwargs)
@@ -26,8 +27,8 @@ class EventHandler:
 class EventGroup:
     """ 事件组 包含多个事件处理器 """
     def __init__(self):
-        self.handlers = []   # type: list[EventHandler]
-        self._handlerSets = set()  # type: set[EventHandler]
+        self.handlers: list[EventHandler] = []
+        self._handlerSets: OrderedDict[EventHandler] = OrderedDict()
         self.needOrder = False
 
     def hasHandler(self, handler: EventHandler):
@@ -40,12 +41,12 @@ class EventGroup:
             self.handlers.append(handler)
         else:
             self.needOrder = True
-        self._handlerSets.add(handler)
+        self._handlerSets[handler] = None
         return True
 
     def remove(self, handler: EventHandler):
         if handler in self._handlerSets:
-            self._handlerSets.remove(handler)
+            del self._handlerSets[handler]
             self.needOrder = True
             return True
         return False

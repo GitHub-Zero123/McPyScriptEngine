@@ -16,9 +16,9 @@ class TimerTask:
 
 class TimerManager:
     def __init__(self):
-        self._tasks = OrderedDict()  # type: OrderedDict[TimerTask, None]
-        self._callFuncs = []         # type: list[TimerTask]
-        self._clearTasks = []        # type: list[TimerTask]
+        self._tasks: OrderedDict[TimerTask, None] = OrderedDict()
+        self._callFuncs: list[TimerTask] = []
+        self._clearTasks: list[TimerTask] = []
 
     def update(self):
         if not self._tasks:
