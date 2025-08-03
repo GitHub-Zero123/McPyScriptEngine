@@ -77,6 +77,7 @@ def onAddEntityServer(event: AddEntityServerEvent):
     player.sendMessage("§b4.§f 右键使用 §a苹果 §f→ §c禁止使用苹果")
     player.sendMessage("§b5.§f 破坏 §c钻石块 §f→ §c变成铁块并产生落雷")
     player.sendMessage("§b6.§f 游戏内伤害一定数值不再产生伤害")
+    player.sendMessage("§b7.§f 使用 §c搞子类物品 §f→ §c破坏方块将产生连锁挖矿")
 
 @SubscribeEvent
 def onScriptTickServer(event: OnScriptTickServer):
@@ -90,6 +91,7 @@ def onScriptTickClient(event: OnScriptTickClient):
 def onServerInit():
     from . import hurtEventTest    # 加载 hurtEventTest 模块
     from . import blockEventTest    # 加载 blockEventTest 模块
+    from . import veinMiner         # 连锁挖掘模块
 
 @ClientInit
 def onClientInit():

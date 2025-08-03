@@ -1,6 +1,10 @@
-from ..api import entityModule as _entityModule
+from ..api import (
+    entityModule as _entityModule,
+    item as _itemModule,
+)
 import PyMCBridge.ModLoader as _ModLoader # type: ignore
 import PyMCBridge.Math as _Math # type: ignore
+from .item import Item
 lambda: "By Zero123"
 
 class _PositionComp:
@@ -359,6 +363,13 @@ class ServerEntity(Entity):
     @staticmethod
     def getAllPlayer() -> list['ServerEntity']:
         return [ServerEntity(entityId) for entityId in _entityModule._serverGetAllPlayerId()]
+
+    def getMainHandItem(self) -> Item:
+        """ 获取实体主手物品 """
+        itemInfo = _itemModule._serverGetEntityHandItemInfo(self.entityId)
+        if not itemInfo:
+            return Item()
+        return Item(itemInfo["newItemName"])
 
 def CREATE_SIDE_ENTITY(entityId: str, isClientSide: bool=False) -> Entity:
     """

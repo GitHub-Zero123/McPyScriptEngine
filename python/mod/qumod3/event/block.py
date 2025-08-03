@@ -1,6 +1,7 @@
 from .entity import BaseServerEntityEvent
 from .base import SERVER_EVENT
 from ..entity import ServerEntity
+from ..block import BlockState
 
 class ServerPlayerTryDestroyBlockEvent(BaseServerEntityEvent):
     """
@@ -38,6 +39,13 @@ class ServerPlayerTryDestroyBlockEvent(BaseServerEntityEvent):
         获取方块的完整名称
         """
         return self.args.get("fullName", "")
+    
+    def getBlockState(self) -> BlockState:
+        """
+        获取方块状态对象
+        :return: BlockState 对象
+        """
+        return BlockState(self.getBlockName())
     
     def getDimensionId(self) -> int:
         """

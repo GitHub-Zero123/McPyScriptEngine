@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.zero123.PyMcBridge.EventManager;
-import org.zero123.PyScriptEngine.ModSdk.ItemManager;
+import org.zero123.PyScriptEngine.ModSdk.ItemUtil;
 
 public class Item
 {
@@ -14,7 +14,7 @@ public class Item
         var item = event.getItemStack().getItem();
         var data = new JsonObject();
         data.addProperty("playerId", event.getEntity().getUUID().toString());
-        data.add("itemDict", ItemManager.itemToJson(item));
+        data.add("itemDict", ItemUtil.itemToJson(item));
         data.addProperty("cancel", false);
         JsonObject retJson;
         if (event.getLevel().isClientSide())

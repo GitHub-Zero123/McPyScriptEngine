@@ -30,6 +30,13 @@ class BlockState:
     def isVoid(self):
         return self.blockName == "minecraft:air" or not self.blockName
 
+    def isAir(self):
+        return self.isVoid()
+    
+    @staticmethod
+    def createAirBlock():
+        return BlockState("minecraft:air")
+
     @staticmethod
     def getBlockState(pos: tuple[int, int, int], dimensionId: int=0) -> 'BlockState':
         """
@@ -42,3 +49,10 @@ class BlockState:
             return BlockState(_worldModule._serverGetBlock(pos, dimensionId).get("name", ""))
         else:
             return BlockState(_worldModule._clientGetBlock(pos).get("name", ""))
+    
+    def __eq__(self, value):
+        if isinstance(value, BlockState):
+            return self.blockName == value.blockName
+        elif isinstance(value, str):
+            return self.blockName == value
+        return False

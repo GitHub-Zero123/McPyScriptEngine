@@ -1,6 +1,7 @@
 from ..api import (
     entityModule as _entityModule,
-    world as _worldModule
+    world as _worldModule,
+    item as _itemModule,
 )
 from ..common.timer import ServerTimerManager, TimerTask
 from functools import lru_cache
@@ -139,11 +140,45 @@ class BlockInfoComp:
         """
         return _worldModule._serverSetBlock(pos, blockDict, oldBlockHandling, dimensionId, updateNeighbors)
 
+class ItemComp:
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+        from ..common.minecraftEnum import ItemPosType
+        self._jumpMap = {
+            ItemPosType.CARRIED: self._getEntityHandItemInfo
+        }
+
+    def GetPlayerItem(self, posType=0, slotPos=0, getUserData=False) -> dict | None:
+        """
+        获取玩家物品信息
+        :param posType: 物品位置类型另见枚举 ItemPosType
+        :param slotPos: 物品槽位置 对于主手/副手无效
+        :param getUserData: 是否获取用户数据(在JE中无效 仅向下兼容)
+        :return: 物品信息字典, 例如 {"newItemName": "minecraft:stone", "newAuxValue": 0} 若获取失败则返回None
+        """
+        if not _entityModule._serverCheckIsPlayer(self.entityId):
+            return None
+        return self.GetEntityItem(posType, slotPos, getUserData)
+
+    def GetEntityItem(self, posType=0, slotPos=0, getUserData=False) -> dict | None:
+        """
+        获取实体物品信息
+        :param posType: 物品位置类型另见枚举 ItemPosType
+        :param slotPos: 物品槽位置 对于主手/副手无效
+        :param getUserData: 是否获取用户数据(在JE中无效 仅向下兼容)
+        :return: 物品信息字典, 例如 {"newItemName": "minecraft:stone", "newAuxValue": 0} 若获取失败则返回None
+        """
+        return self._jumpMap[posType](slotPos)
+
+    def _getEntityHandItemInfo(self, slotPos: int=-1):
+        """ 获取实体HandMain手持物品 """
+        return _itemModule._serverGetEntityHandItemInfo(self.entityId)
+
 class EngineCompFactory:
     # 实现网易组件工厂
     @lru_cache(80)
     def CreateItem(self, entityId: str):
-        pass
+        return ItemComp(entityId)
 
     @lru_cache(80)
     def CreatePos(self, entityId: str):
