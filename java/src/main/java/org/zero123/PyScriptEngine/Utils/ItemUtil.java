@@ -1,4 +1,4 @@
-package org.zero123.PyScriptEngine.ModSdk;
+package org.zero123.PyScriptEngine.Utils;
 
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
