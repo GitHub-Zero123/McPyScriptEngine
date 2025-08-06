@@ -3,14 +3,20 @@ from mod.qumod3.event.block import ServerPlayerTryDestroyBlockEvent
 from mod.qumod3.block import BlockState, PlaceOptions
 from collections import deque
 
+class Static:
+    veinMiningPlayers = set()
+
 @SubscribeEvent
 def onServerPlayerTryDestroyBlock(event: ServerPlayerTryDestroyBlockEvent):
     player = event.getPlayer()
+    if player in Static.veinMiningPlayers:
+        # 避免循环调用
+        return
     item = player.getMainHandItem()
     if not "pickaxe" in item.itemName:
         return
     dmId = event.getDimensionId()
-    maxItCount = 1000
+    maxItCount = 500
     # 搞子类物品 触发连锁挖掘
     startPos = event.getPos()
     originBlockState = event.getBlockState()
@@ -41,8 +47,14 @@ def onServerPlayerTryDestroyBlock(event: ServerPlayerTryDestroyBlockEvent):
             if neighborState == originBlockState:
                 targetPos.add(neighbor)
                 queue.append(neighbor)
-
-    airBlock = BlockState.createAirBlock()
-    placeOpt = PlaceOptions(1, False)
+    targetPos.discard(startPos)
+    Static.veinMiningPlayers.add(player)
     for pos in targetPos:
-        airBlock.placeServer(pos, dmId, placeOpt)
+        # 模拟玩家破坏方块(消耗武器耐久)
+        player.action.destroyBlock(pos)
+    Static.veinMiningPlayers.discard(player)
+
+    # airBlock = BlockState.createAirBlock()
+    # placeOpt = PlaceOptions(1, False)
+    # for pos in targetPos:
+    #     airBlock.placeServer(pos, dmId, placeOpt)

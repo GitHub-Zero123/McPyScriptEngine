@@ -1,5 +1,5 @@
 from .base import BaseServerEvent, BaseClientEvent, SERVER_EVENT, CLIENT_EVENT
-from ..entity import ServerEntity, ClientEntity
+from ..entity import ServerPlayer, ClientEntity
 lambda: "By Zero123"
 
 class _RIGHT_CLICK_ITEM:
@@ -31,9 +31,9 @@ class ServerItemTryUseEvent(BaseServerEvent, _RIGHT_CLICK_ITEM):
         super().__init__(dic)
         self._entityObj = None
 
-    def getEntity(self) -> ServerEntity:
+    def getEntity(self) -> ServerPlayer:
         if self._entityObj is None:
-            self._entityObj = ServerEntity(self.playerId)
+            self._entityObj = ServerPlayer(self.playerId)
         return self._entityObj
 
 class ClientItemTryUseEvent(BaseClientEvent, _RIGHT_CLICK_ITEM):

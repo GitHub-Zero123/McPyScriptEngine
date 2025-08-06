@@ -2,6 +2,7 @@ package org.zero123.PyScriptEngine.ModSdk;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -356,5 +357,24 @@ public class EntityModule
     public static int _serverGetEntityDmId(String entityId)
     {
         return WorldUtil.serverGetEntityDimensionId(EntityUtil.serverGetEntityByUUID(entityId).orElse(null));
+    }
+
+    // 服务端模拟玩家破坏方块
+    public static int _serverPlayerDestroyBlock(String entityId, String posArrayStr)
+    {
+        final var entityOpt = EntityUtil.serverGetEntityByUUID(entityId);
+        if(entityOpt.isEmpty())
+        {
+            return 0;
+        }
+        if(entityOpt.get() instanceof ServerPlayer player)
+        {
+            var posArray = Utils.parseIntArray(posArrayStr);
+            if(player.gameMode.destroyBlock(new BlockPos(posArray[0], posArray[1], posArray[2])))
+            {
+                return 1;
+            }
+        }
+        return 0;
     }
 }

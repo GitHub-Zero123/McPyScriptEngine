@@ -371,6 +371,52 @@ class ServerEntity(Entity):
             return Item()
         return Item(itemInfo["newItemName"])
 
+    def _toServerPlayer(self) -> 'ServerPlayer':
+        """
+        转换为服务端玩家实体对象(不会检查是否真是玩家实体)
+        :return: ServerPlayer对象
+        """
+        return ServerPlayer(self.entityId)
+
+    def toServerPlayer(self) -> 'ServerPlayer':
+        """
+        转换为服务端玩家实体对象
+        :return: ServerPlayer对象
+        """
+        if not self.isPlayer():
+            raise RuntimeError("当前实体不是玩家实体")
+        return self._toServerPlayer()
+
+class PlayerAction:
+    def __init__(self, entityId: str):
+        self.entityId = entityId
+
+    def destroyBlock(self, pos: tuple[int, int, int]) -> bool:
+        """
+        尝试破坏特定位置的方块
+        :param pos: 方块位置 (x, y, z)
+        :return: 是否成功破坏方块
+        """
+        return _entityModule._serverPlayerDestroyBlock(self.entityId, pos)
+
+class ServerPlayer(ServerEntity):
+    """
+    服务端玩家实体类
+    """
+    def __init__(self, entityId: str):
+        super().__init__(entityId)
+        self._playerAction: PlayerAction | None = None
+
+    @property
+    def action(self) -> PlayerAction:
+        """
+        获取玩家行为组件
+        :return: PlayerAction对象
+        """
+        if not self._playerAction:
+            self._playerAction = PlayerAction(self.entityId)
+        return self._playerAction
+
 def CREATE_SIDE_ENTITY(entityId: str, isClientSide: bool=False) -> Entity:
     """
     创建一个实体对象

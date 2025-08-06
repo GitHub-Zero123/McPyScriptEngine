@@ -108,8 +108,8 @@ class BlockStateComp:
         self.levelId = levelId
 
 class BlockInfoComp:
-    def __init__(self, levelId: str):
-        self.levelId = levelId
+    def __init__(self, mId: str):
+        self.mId = mId
 
     def GetBlockNew(self, pos: tuple[int, int, int], dimensionId: int=0):
         """
@@ -139,6 +139,20 @@ class BlockInfoComp:
         :param updateNeighbors: 是否更新邻近方块
         """
         return _worldModule._serverSetBlock(pos, blockDict, oldBlockHandling, dimensionId, updateNeighbors)
+    
+    def PlayerDestoryBlock(self, pos: tuple[int, int, int], particle: int = 1, sendInv: bool = False):
+        # 这是一个拼写错误的版本，此处仅向下兼容网易命名
+        return self.PlayerDestroyBlock(pos, particle, sendInv)
+
+    def PlayerDestroyBlock(self, pos: tuple[int, int, int], particle: int = 1, sendInv: bool = False):
+        """
+        模拟玩家使用手中的工具破坏指定方块
+        :param pos: 方块位置坐标
+        :param particle: 是否播放破坏粒子 JE版本不适用
+        :param sendInv: 是否发送物品栏更新 JE版本不适用
+        :return: 是否成功破坏方块
+        """
+        return _entityModule._serverPlayerDestroyBlock(self.mId, pos)
 
 class ItemComp:
     def __init__(self, entityId: str):
@@ -148,7 +162,7 @@ class ItemComp:
             ItemPosType.CARRIED: self._getEntityHandItemInfo
         }
 
-    def GetPlayerItem(self, posType=0, slotPos=0, getUserData=False) -> dict | None:
+    def GetPlayerItem(self, posType: int = 0, slotPos: int = 0, getUserData: bool = False) -> dict | None:
         """
         获取玩家物品信息
         :param posType: 物品位置类型另见枚举 ItemPosType
@@ -160,7 +174,7 @@ class ItemComp:
             return None
         return self.GetEntityItem(posType, slotPos, getUserData)
 
-    def GetEntityItem(self, posType=0, slotPos=0, getUserData=False) -> dict | None:
+    def GetEntityItem(self, posType: int = 0, slotPos: int = 0, getUserData: int = False) -> dict | None:
         """
         获取实体物品信息
         :param posType: 物品位置类型另见枚举 ItemPosType
@@ -175,7 +189,7 @@ class ItemComp:
         return _itemModule._serverGetEntityHandItemInfo(self.entityId)
 
 class EngineCompFactory:
-    # 实现网易组件工厂
+    # 简易复刻网易组件工厂
     @lru_cache(80)
     def CreateItem(self, entityId: str):
         return ItemComp(entityId)

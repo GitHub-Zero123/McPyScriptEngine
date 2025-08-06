@@ -1,5 +1,5 @@
 from .base import BaseServerEvent, BaseClientEvent, SERVER_EVENT, CLIENT_EVENT
-from ..entity import ServerEntity, ClientEntity
+from ..entity import ServerEntity, ClientEntity, ServerPlayer
 lambda: "By Zero123"
 
 class BaseServerEntityEvent(BaseServerEvent):
@@ -11,6 +11,12 @@ class BaseServerEntityEvent(BaseServerEvent):
         """ 获取服务端实体对象 """
         if self._entityObj is None:
             self._entityObj = ServerEntity(self.entityId)
+        return self._entityObj
+    
+    def _getPlayerEntity(self) -> ServerPlayer:
+        """ 获取玩家实体对象 """
+        if self._entityObj is None:
+            self._entityObj = ServerPlayer(self.entityId)
         return self._entityObj
 
 class BaseClientEntityEvent(BaseClientEvent):

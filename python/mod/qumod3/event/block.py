@@ -1,6 +1,6 @@
 from .entity import BaseServerEntityEvent
 from .base import SERVER_EVENT
-from ..entity import ServerEntity
+from ..entity import ServerPlayer
 from ..block import BlockState
 
 class ServerPlayerTryDestroyBlockEvent(BaseServerEntityEvent):
@@ -13,13 +13,13 @@ class ServerPlayerTryDestroyBlockEvent(BaseServerEntityEvent):
         super().__init__(args.get("playerId", ""))
         self.args = args
 
-    def getPlayer(self) -> ServerEntity:
+    def getPlayer(self) -> ServerPlayer:
         """
         获取尝试破坏方块的玩家实体
         :return: 玩家实体对象
         """
-        return self.getEntity()
-    
+        return self._getPlayerEntity()
+
     def getPos(self) -> tuple[int, int, int]:
         """
         获取尝试破坏方块的坐标

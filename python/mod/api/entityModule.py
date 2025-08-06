@@ -150,3 +150,9 @@ def _serverGetEntityDmId(entityId: str) -> int:
     return int(findJavaCls(_ENTITY_MODULE, "_serverGetEntityDmId", [CAST_TYPE.STRING], CAST_TYPE.INT).call(
         entityId
     ))
+
+def _serverPlayerDestroyBlock(entityId: str, pos: tuple[int, int, int]) -> bool:
+    """ 模拟玩家破坏方块 """
+    return bool(findJavaCls(_ENTITY_MODULE, "_serverPlayerDestroyBlock", [CAST_TYPE.STRING, CAST_TYPE.STRING], CAST_TYPE.INT).call(
+        entityId, numberTupleJoin(pos)
+    ))

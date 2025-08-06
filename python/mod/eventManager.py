@@ -73,7 +73,7 @@ class EventGroup:
 class EventManager:
     """ 事件管理器 """
     def __init__(self):
-        self.eventMaps = {}  # type: dict[object, EventGroup]
+        self.eventMaps: dict[object, EventGroup] = {}
 
     def clearMap(self):
         self.eventMaps.clear()
