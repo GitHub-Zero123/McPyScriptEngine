@@ -32,7 +32,7 @@ public class Utils
         int[] result = new int[parts.length];
         for (int i = 0; i < parts.length; i++)
         {
-            result[i] = Integer.parseInt(parts[i]);
+            result[i] = (int) Double.parseDouble(parts[i]);
         }
         return result;
     }
