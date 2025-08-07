@@ -4,7 +4,7 @@ import PyMCBridge.ModLoader as _ModLoader # type: ignore
 lambda: "By Zero123"
 # 由于JNI自身的性能问题, 完全在CPP上实现获得的提升微忽慎微, 且不利于维护, 因此直接绑定给Python动态调用与缓存
 
-_JAVA_CLS_CACHE = {}    # type: dict[object, PyCastJVMFunction]
+_JAVA_CLS_CACHE: dict[object, PyCastJVMFunction] = {}
 
 def findJavaCls(clsPath: str, methodName: str, argsType: list[CAST_TYPE], returnType: CAST_TYPE=CAST_TYPE.VOID) -> PyCastJVMFunction:
     """ 查找或创建一个Java类的函数绑定(若路径无效可能导致进程崩溃) """
@@ -38,3 +38,6 @@ def ServerOnly(func):
             raise RuntimeError(f"函数 {func.__name__} 只能在服务端调用！")
         return func(*args, **kwargs)
     return wrapper
+
+# 注册Python虚拟机销毁处理器, 清理Java类缓存, 确保在VM析构前触发CPP对象的析构函数
+_ModLoader.regPyVMDestroyHandler(lambda: _JAVA_CLS_CACHE.clear())

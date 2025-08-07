@@ -3,7 +3,7 @@ import PyMCBridge.ModLoader as ModLoader # type: ignore
 from ..utils import Version, TRY_EXEC_FUNC
 lambda: "mod.common.mod 网易MOD_SDK加载器兼容层 By Zero123"
 
-_MOD_CLS_LIST = []  # type: list[type]
+_MOD_CLS_LIST: list[type] = []
 
 class ModScanner:
     """ MOD扫描器 """
@@ -112,7 +112,7 @@ class Mod:
 
 def SCANNER_LOAD():
     """ 扫描器加载 """
-    modInfoMap = {}     # type: dict[str, ModScanner]
+    modInfoMap: dict[str, ModScanner] = {}
     for cls in _MOD_CLS_LIST:
         try:
             modObj = ModScanner(cls)

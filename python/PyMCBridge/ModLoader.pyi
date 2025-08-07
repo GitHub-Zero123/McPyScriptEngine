@@ -16,18 +16,22 @@ def checkJVMIsAlive() -> bool:
     pass
 
 # 注: 所有的注册Handler将在游戏对应的线程环境关闭时自动清理
-def regServerLoaderHandler(func: function) -> bool:
+def regServerLoaderHandler(func: function):
     """ 注册服务器加载器处理函数"""
     pass
 
-def regClientLoaderHandler(func: function) -> bool:
+def regClientLoaderHandler(func: function):
     """ 注册客户端加载器处理函数 """
     pass
 
-def regServerDestroyHandler(func: function) -> bool:
+def regServerDestroyHandler(func: function):
     """ 注册服务器销毁处理函数 """
     pass
 
-def regClientDestroyHandler(func: function) -> bool:
+def regClientDestroyHandler(func: function):
     """ 注册客户端销毁处理函数 """
+    pass
+
+def regPyVMDestroyHandler(func: function):
+    """ 注册PyVM销毁处理函数 """
     pass

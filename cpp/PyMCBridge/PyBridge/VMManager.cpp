@@ -1,7 +1,6 @@
 #include "VMManager.h"
 #include "PyBridge.h"
 #include <vector>
-#include <pybind11/embed.h>
 #include <optional>
 #include <format>
 // By Zero123
@@ -10,6 +9,7 @@ namespace py = pybind11;
 static std::vector<std::string> ENV_PATHS;
 static bool _USE_UTF8 = false;
 static bool _PY_LINE_FLUSH_MODE = false;
+
 class PyVM
 {
 public:
@@ -47,6 +47,8 @@ public:
 	~PyVM()
 	{
 		PyGILState_Ensure();
+		QPyMCBridge::vmDestroyHandler.call();
+		QPyMCBridge::vmDestroyHandler.clear();
 		QPyMCBridge::PyVMDestroyHandler();
 		py::finalize_interpreter();
 	}
@@ -61,6 +63,7 @@ static std::optional<PyVM> _pyVm;
 namespace QPyMCBridge
 {
 	bool INIT_PY_THREAD = false;
+	QPyMCBridge::EventManager<py::function> vmDestroyHandler;
 
 	void initVM()
 	{

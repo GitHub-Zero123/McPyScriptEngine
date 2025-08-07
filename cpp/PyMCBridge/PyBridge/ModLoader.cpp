@@ -1,6 +1,7 @@
 #include "ModLoader.h"
 #include "../Core/EventSystem.hpp"
 #include "GameThread.h"
+#include "VMManager.h"
 // By Zero123
 namespace py = pybind11;
 
@@ -32,6 +33,15 @@ namespace QPyMCBridge
 		});
 		modLoader.def("regClientDestroyHandler", [](py::object&& pyo) {
 			clientDestroyHandlers.addHandler(std::move(pyo));
+		});
+		// JVM检查
+		modLoader.def("checkJVMIsAlive", []() {
+			return QPyMCBridge::getVMLiveState();
+		});
+
+		// 注册Python虚拟机的销毁处理器 用于内存回收
+		modLoader.def("regPyVMDestroyHandler", [](py::function&& func) {
+			QPyMCBridge::vmDestroyHandler.addHandler(std::move(func));
 		});
 	}
 

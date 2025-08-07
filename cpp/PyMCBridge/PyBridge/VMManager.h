@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
 #include <filesystem>
+#include <pybind11/embed.h>
+#include "../Core/EventSystem.hpp"
 
 namespace QPyMCBridge
 {
 	// 是否初始化Py线程
 	extern bool INIT_PY_THREAD;
+	extern QPyMCBridge::EventManager<pybind11::function> vmDestroyHandler;
 
 	// 初始化PyVM
 	void initVM();
