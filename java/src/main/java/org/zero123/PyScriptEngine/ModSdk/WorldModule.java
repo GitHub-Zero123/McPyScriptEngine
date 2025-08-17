@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import org.zero123.PyScriptEngine.Utils.BlockUtil;
 import org.zero123.PyScriptEngine.Utils.WorldUtil;
 
-public class World
+public class WorldModule
 {
     // 服务端设置方块
     public static int _serverSetBlock(String pos, String blockJo, int oldHandling, int dimensionId, int updateNeighbors)

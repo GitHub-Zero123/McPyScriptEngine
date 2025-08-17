@@ -140,7 +140,9 @@ class Entity:
         if not self.entityId:
             return
         if _ModLoader.isClientThread():
-            _entityModule._clientSendMessage(self.entityId, msg)
+            if self.entityId != _entityModule._clientGetLocalPlayerId():
+                raise RuntimeError("客户端实体只能向本地玩家发送消息")
+            _entityModule._clientSendMessage(msg)
             return
         _entityModule._serverSendMessage(self.entityId, msg)
 

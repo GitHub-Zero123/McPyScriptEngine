@@ -2,7 +2,7 @@ from .jni import findJavaCls, CAST_TYPE, numberTupleJoin
 from json import dumps, loads
 lambda: "By Zero123"
 
-_WORLD_MODULE = "org/zero123/PyScriptEngine/ModSdk/World"
+_WORLD_MODULE = "org/zero123/PyScriptEngine/ModSdk/WorldModule"
 
 def _serverSetBlock(pos: tuple[int, int, int], blockJo: dict, oldHandling: bool = 0, dimensionId: int = 0, updateNeighbors: bool=True) -> bool:
     """ 服务端设置方块
